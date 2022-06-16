@@ -1,0 +1,16 @@
+<?php
+
+// Application development
+/**
+ * use php dev serve function to create a development server for your application
+ */
+
+define('ROOT',__DIR__);
+
+require_once ROOT . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'app.php';
+
+use App\APP;
+
+APP::initialize($argv);
+
+require_once ROOT . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'loader.php';

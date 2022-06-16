@@ -1,0 +1,1 @@
+document.getElementById('%+_env("NAME","TEST")+%')
