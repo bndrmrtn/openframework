@@ -12,9 +12,7 @@ class DB {
                 self::$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 //unlink(ROOT . self::$errorFile);
             } catch(Exception $e){
-                $error_msg = $e->getMessage();
-                echo $error_msg;
-                //file_put_contents(ROOT . self::$errorFile,'ERROR: ' . $error_msg . "\n" . 'Date: ' . date('Y-m-d H:i:s'));
+                display_error($e);
                 exit;
             }
             self::$connected = true;
