@@ -86,7 +86,7 @@ class Files {
 
     public function save(){
         try {
-            file_put_contents($this->store_data['path'],$this->store_data['data']);
+            file_put_contents($this->store_data['path'],static::getTempData($this->store_data['data_id']));
         } catch(Exception $e){
             return false;
         } finally {
