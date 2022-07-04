@@ -1,0 +1,7 @@
+2022-07-03 15:41:48
+Type: ErrorException; Message: Uncaught Error: Call to undefined function dddd() in /opt/lampp/htdocs/openframework/app.php:63
+Stack trace:
+#0 /opt/lampp/htdocs/openframework/public/index.php(8): require()
+#1 {main}
+  thrown; File: /opt/lampp/htdocs/openframework/app.php; Line: 63;
+

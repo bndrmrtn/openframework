@@ -1,4 +1,3 @@
 <?php
-$auth = Auth::makeLogin();
 
-$is_loggedin = $auth['loggedin'];
+$is_loggedin = Auth::is_loggedin();

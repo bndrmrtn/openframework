@@ -49,7 +49,7 @@ class Router {
     };
  
     createLoaderCss = () => {
-        const rawcss = '.rlinkblur {filter:blur(5px);z-index:0;} [rlink-loader-div] {z-index:10;width: 0%;padding: 5px;position:fixed;bottom:0;background-image: linear-gradient(to right, #30f8a8, blueviolet);background-size: 400% 100%;animation: rlinkloaderspin 3s ease infinite;}@keyframes rlinkloaderspin {0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;}100% {background-position: 0% 50%;width:100%;}}';
+        const rawcss = '.rlinkblur {filter:blur(5px);z-index:0;} [rlink-loader-div] {z-index:10;width: 0%;padding: 2px;position:fixed;top:0;background-image: linear-gradient(to right, #30f8a8, blueviolet);background-size: 400% 100%;animation: rlinkloaderspin 3s ease infinite;}@keyframes rlinkloaderspin {0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;}100% {background-position: 0% 50%;width:100%;}}';
         const style=document.createElement('style');
         style.innerHTML=rawcss;
         style.setAttribute('rlink-loader-css','');

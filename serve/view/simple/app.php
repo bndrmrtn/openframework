@@ -1,27 +1,28 @@
 <?php
 
-Components::import('mdoc');
+Components::import('MDoc');
 
-Components::import('nav');
+Components::import('Nav');
 
 $hasAuth = NULL;
 
-$loggedin = Auth::makeLogin()['loggedin'];
-
 if(_env('USE_AUTH',false)){
+    $loggedin = Auth::is_loggedin();
+
     $hasAuth = [
         'links' => [
-            ['href'=>url('/'),'text'=>'Home','no-rlink','active'],
-            ['href'=>url('/auth'),'text'=>'Login', $loggedin ? 'no-display' : ''],
-            ['href'=>url('/register'),'text'=>'Register',$loggedin ? 'no-display' : ''],
-            ['href'=>url('/register'),'text'=>'Register',$loggedin ? 'no-display' : ''],
-            ['href'=>url('/logout'),'text'=>'Logout',!$loggedin ? 'no-display' : ''],
+            ['href'=>url('/#'),'text'=>'Home','no-rlink','active'],
+            ['href'=>url('/auth/login'),'text'=>'Login', $loggedin ? 'no-display' : ''],
+            ['href'=>url('/auth/register'),'text'=>'Register',$loggedin ? 'no-display' : ''],
+            ['href'=>'#','text'=> 'Welcome ' . ucfirst(Auth::user('user')),!$loggedin ? 'no-display' : '','no-rlink'],
+            ['href'=>url('/auth/logout'),'text'=>'Logout',!$loggedin ? 'no-display' : ''],
         ]
     ];
 }
 
-MdocComponent::load([
+MDocComponent::load([
     'title' => $title,
     'description' => $description,
     'useNav' => $hasAuth,
+    'float' => true,
 ]);

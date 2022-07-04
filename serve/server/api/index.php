@@ -1,6 +1,6 @@
 <?php
 
 /**
- * API dirs if post request
+ * API dirs for bigger apps
  */
 

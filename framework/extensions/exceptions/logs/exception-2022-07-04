@@ -1,0 +1,10 @@
+2022-07-04 13:51:17
+Type: ErrorException; Message: Uncaught Error: Call to a member function route() on array in /opt/lampp/htdocs/openframework/framework/auth/handle/html/login.php:11
+Stack trace:
+#0 /opt/lampp/htdocs/openframework/framework/auth/handle/index.php(16): require()
+#1 /opt/lampp/htdocs/openframework/framework/app/stream/stream.php(23): require('...')
+#2 /opt/lampp/htdocs/openframework/app.php(64): require('...')
+#3 /opt/lampp/htdocs/openframework/public/index.php(8): require('...')
+#4 {main}
+  thrown; File: /opt/lampp/htdocs/openframework/framework/auth/handle/html/login.php; Line: 11;
+

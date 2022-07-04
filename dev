@@ -5,12 +5,14 @@
  * use php dev serve function to create a development server for your application
  */
 
-define('ROOT',__DIR__);
+const ROOT =__DIR__;
 
-require_once ROOT . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'app.php';
+const FRAMEWORK = ROOT . '/framework';
+
+require_once FRAMEWORK . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'loadfiles.php';
 
 use App\APP;
 
 APP::initialize($argv);
 
-require_once ROOT . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'loader.php';
+require_once FRAMEWORK . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'loader.php';

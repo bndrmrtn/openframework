@@ -3,8 +3,14 @@
 // application root dir
 const ROOT = __DIR__;
 
+// framework dir
+const FRAMEWORK = ROOT . '/framework';
+
+// check the php version and requirements
+require FRAMEWORK . '/version.php';
+
 // load everything before the app starts
-require ROOT . '/app/before_initialize/index.php';
+require FRAMEWORK . '/app/before_initialize/index.php';
 
 // load extensions
 /**
@@ -12,7 +18,7 @@ require ROOT . '/app/before_initialize/index.php';
  * a manager.php file, the extension loader search for managers in the folders than includes it
  * easy to use ;)
  */
-require ROOT . '/extensions/e_configdir__/index.php';
+require FRAMEWORK . '/extensions/e_configdir__/index.php';
 
 // costumize ini
 // you could use _env() helper function in this file, if .env.php supported
@@ -21,7 +27,7 @@ require ROOT . '/ini.php';
 /**
  * this is the main application controller that loads almost everything
  */
-require ROOT . '/config/loaders/controller.php';
+require FRAMEWORK . '/config/loaders/controller.php';
 
 /**
  * that loads the database if it required to load,
@@ -50,9 +56,9 @@ global $_H;
  * in this file you could globally configure the application
  * may used for json apis to change the header or smth
  */
-require ROOT . '/app/application.php';
+require FRAMEWORK . '/app/application.php';
 
 /**
  * this is where the app stream the app to the web
  */
-require ROOT . '/app/stream/stream.php';
+require FRAMEWORK . '/app/stream/stream.php';

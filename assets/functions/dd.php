@@ -14,7 +14,7 @@ function dd($v){
     }
     </style>';
     $dd = ob_get_contents();
-    ob_flush();
+    ob_clean();
     echo '<script>document.querySelector("html").innerHTML = atob("' . base64_encode($dd) . '");</script>';
     exit;
 }
