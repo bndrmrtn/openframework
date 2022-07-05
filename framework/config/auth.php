@@ -20,6 +20,7 @@ $config_auth['validation'] = [
 $config_auth[ 'validation_errors' ] = [
     'required' => 'This field is required',
     'regex' => 'No special chars allowed',
+    'email' => 'Invalid email format',
 ];
 
 $config_auth[ 'error_msgs' ] = [

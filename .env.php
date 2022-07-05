@@ -13,17 +13,17 @@ _makeenv([
 // Use view
 'USE_VIEW' => true, // true by default
 // Authentication
-'USE_AUTH' => true, // false by default
+'USE_AUTH' => false, // false by default
 // SESSIONS
-'USE_SESSION' => true,
+'USE_SESSION' => false,
 //'SESSION_NAME' => 'test_session_id', // configure the session name
 // Database
-'DB_NEED_CONNECTION' => true,
+'DB_NEED_CONNECTION' => false,
 'DB_HOST' => '127.0.0.1',
 'DB_PORT' => 3306,
 'DB_USER' => 'root',
 'DB_PASSWORD' => '',
-'DB_NAME' => 'openframework',
+'DB_NAME' => '',
 // New file storage path
 'STORE_PATH' => FRAMEWORK . '/app/storage', // default
 ]);

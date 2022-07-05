@@ -27,15 +27,14 @@ class Login extends Auth {
 
     public static function checkTable(){
         if(!_env('APP_DEV',true)) return;
-        $table = self::$table_name;
-        $sql = "CREATE TABLE IF NOT EXISTS `$table` (
-            `id` BIGINT(255) AUTO_INCREMENT NOT NULL,
-            `user` varchar(255) NOT NULL,
-            `token` TEXT NOT NULL,
-            `date` DATETIME,
-            PRIMARY KEY (`id`)) 
-            CHARACTER SET utf8 COLLATE utf8_general_ci";
-        DB::exec($sql);
+        $sql = SQL::table(self::$table_name)
+        ->tableColumn('id','bigint',255,false,true)
+        ->tableColumn('user','varchar',255)
+        ->tableColumn('token','text')
+        ->tableColumn('date','datetime')
+        ->tableSetPrimaryKey('id')
+        ->saveTable();
+        return $sql == true;
     }
 
     public static function token($token){

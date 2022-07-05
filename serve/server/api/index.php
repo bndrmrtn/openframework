@@ -1,6 +1,6 @@
 <?php
 
 /**
- * API dirs for bigger apps
+ * API dirs for bigger codes
  */
 

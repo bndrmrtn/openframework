@@ -7,6 +7,14 @@ $dirs = glob(FRAMEWORK . '/extensions/*' , GLOB_ONLYDIR);
 foreach($dirs as $dir){
     if($dir != e_configdir__){
         $ipath = $dir . '/manager.php';
-        if(file_exists($ipath)) include_once $ipath;
+        $ename = explode('/',$dir);
+        $ename = $ename[array_key_last($ename)];
+        if(file_exists($ipath)){
+            if(!isset($GLOBALS['e_req_disabled'])){
+                include_once $ipath;
+            } else if(!in_array($ename,$GLOBALS['e_req_disabled'])){
+                include_once $ipath;
+            }
+        } 
     }
 }

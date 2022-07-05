@@ -1,9 +1,9 @@
 <?php
 
 class DB {
-    public static $PDO;
-    public static $connected = false;
-    private static $errorFile = '/database/errors/error.txt';
+    
+    protected static $PDO;
+    protected static $connected = false;
     private static $querys = [];
 
     public static function createConnection($config){
@@ -11,7 +11,6 @@ class DB {
             try {
                 self::$PDO = new PDO("mysql:host=$config[host];port=$config[port];dbname=$config[dbname]", "$config[user]", "$config[password]");
                 self::$PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                //unlink(ROOT . self::$errorFile);
             } catch(Exception $e){
                 display_error($e);
                 exit;

@@ -3,7 +3,7 @@
 class Auth {
 
     private static $token = NULL;
-    private static $config = [];
+    protected static $config = [];
     private static $usable = false;
     private static $loggedin = false;
     private static $user = [];
@@ -22,10 +22,16 @@ class Auth {
         $config = require FRAMEWORK . '/config/auth.php';
         if(!_env('USE_SESSION')){
             die('Authentication requires sessions');
+        } else if(!_env('DB_NEED_CONNECTION')){
+            die('Authentication requires database connection');
         }
         self::$config = $config;
         self::$usable = true;
         self::autologin();
+    }
+
+    public static function getTableName(){
+        return self::$config['table'];
     }
 
     public static function tryLogin(callable $callback = NULL){
@@ -189,6 +195,63 @@ class Auth {
                 return $error;
             }
         }
+        return false;
+    }
+
+    public static function register(callable $register,array $formValidation = []){
+        if(is_callable($register)){
+            
+            $form = new Form();
+            $form->bindData(post());
+
+            $userValidation = self::$config['validation']['user'];
+            $passwordValidation = self::$config['validation']['password'];
+
+            $data = $form->validate(new Validation(array_merge([
+                $userValidation['col'] => $userValidation['validation'],
+                $passwordValidation['col'] => [],
+            ],$formValidation),self::$config['validation_errors']));
+            if(!$data['errors']){
+                if(DB::exists(self::getTableName(),[ $userValidation['col'] = $data[$userValidation['col']] ])){
+                    self::$auth_error = 'user-exists';
+                    return false;
+                }
+                $data = self::useHash($passwordValidation['col'],$data['valid']);
+                if(!($reg = $register($data))) $reg = false;
+                if(!$reg['error']){
+                    return true;
+                }
+                self::$auth_error = $reg['error'];
+                return;
+            }
+            self::$has_errors = true;
+            //dd($data['errors']);
+            self::$errors = $data['errors'];
+            return false;
+        } else {
+            MErrors::custom(500,'The registration not configured properly');
+        }
+    }
+
+    public static function saveRegister($data){
+        return self::safeLogin($data);
+    }
+
+    public static function notExists(array $data, array $values){
+        $where = '';
+        $vals = [];
+        foreach($data as $key => $val){
+            if(isset($values[$val])){
+                $where .= "$val = ?";
+                $vals[] = $values[$val];
+            }
+            if(array_key_last($data) != $key){
+                $where .= ' OR ';
+            }
+        }
+        $select = DB::_select('SELECT COUNT(*) as total FROM ' . self::getTableName() . ' WHERE ' . $where . ' LIMIT 1',$vals,[0]);
+        if($select['total'] == 0) return true;
+        self::$auth_error = 'already-taken';
         return false;
     }
 

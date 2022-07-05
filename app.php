@@ -22,7 +22,7 @@ require FRAMEWORK . '/extensions/e_configdir__/index.php';
 
 // costumize ini
 // you could use _env() helper function in this file, if .env.php supported
-require ROOT . '/ini.php';
+require FRAMEWORK . '/ini.php';
 
 /**
  * this is the main application controller that loads almost everything
