@@ -34,6 +34,16 @@ class SQL extends DB {
         return $this;
     }
 
+    public function tableForeignColumn($name,$type,$len = 255,$ftable,$fcol = 'id'){
+        $this->vals['columns'][$name] = [
+            'type' => $type,
+            'len' => $len,
+            'foreign_table' => $ftable,
+            'foreign_column' => $fcol,
+        ];
+        return $this;
+    }
+
     public function tableSetPrimaryKey($name){
         if(isset($this->vals['columns'][$name])){
             $this->vals['columns'][$name]['primary'] = true;
@@ -49,19 +59,29 @@ class SQL extends DB {
         $sql = "CREATE TABLE IF NOT EXISTS `{$this->table}` (\n";
         foreach($this->vals['columns'] as $name => $column){
             $col = "`$name` " . strtoupper($column['type']);
-            if($column['len']){
-                $col .= '(' . $column['len'] . ')';
-            }
-            if($column['ai']){
-                $col .= ' AUTO_INCREMENT';
-            }
-            if(!$column['nullable']){
-                $col .= ' NOT NULL';
-            }
-            $col .= ',' . "\n";
-            $sql .= $col;
-            if(isset($column['primary']) && $column['primary']){
-                $primary = $name;
+            if(!isset($column['foreign_table']) || !isset($column['foreign_column'])){
+                if($column['len']){
+                    $col .= '(' . $column['len'] . ')';
+                }
+                if($column['ai']){
+                    $col .= ' AUTO_INCREMENT';
+                }
+                if(!$column['nullable']){
+                    $col .= ' NOT NULL';
+                }
+                $col .= ',' . "\n";
+                $sql .= $col;
+                if(isset($column['primary']) && $column['primary']){
+                    $primary = $name;
+                }
+            } else {
+                if($column['len']){
+                    $col .= '(' . $column['len'] . ')';
+                }
+                $col .= ',';
+                $col .= "FOREIGN KEY (`$name`) REFERENCES `" . $column['foreign_table'] . "` (`" . $column['foreign_column'] . "`)";
+                $col .= ',' . "\n";
+                $sql .= $col;
             }
         }
         if($primary){
