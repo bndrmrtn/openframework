@@ -2,7 +2,8 @@
 
 $tools = array(
     '/app.php',
-    '/components/index.php'
+    '/components/index.php',
+    '/updater/updater.php',
 );
 
 foreach($tools as $tool){

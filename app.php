@@ -1,5 +1,8 @@
 <?php
 
+$composer_autoload_file_include = __DIR__ . '/vender/autoload.php';
+if(file_exists($composer_autoload_file_include)) require_once $composer_autoload_file_include;
+
 // application root dir
 const ROOT = __DIR__;
 

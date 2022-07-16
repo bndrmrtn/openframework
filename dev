@@ -1,5 +1,10 @@
 <?php
 
+const API = 'https://open.mrtn.vip/.dev';
+// to get an api key, create an opendev account
+// create key here: https://open.mrtn.vip/auth/register
+const API_KEY = 'xxx-xxx-xxx-xxx';
+
 // Application development
 /**
  * use php dev serve function to create a development server for your application
@@ -11,7 +16,7 @@ const FRAMEWORK = ROOT . '/framework';
 
 // require all the extensions
 // disable the not required extensions
-$GLOBALS['e_req_disabled'] = [ 'api', 'rtime', 'use_components', 'exceptions' ];
+$GLOBALS['e_req_enabled'] = [ 'env' ];
 require FRAMEWORK . '/extensions/e_configdir__/index.php';
 
 // require the controller to load the database

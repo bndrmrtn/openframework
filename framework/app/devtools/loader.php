@@ -14,6 +14,9 @@ switch($type){
     case 'db:setup-tables':
         APP::DBSetupTables();
     break;
+    case 'update':
+        require __DIR__ . '/updater/run.php';
+    break;
     default:
         echo 'Unknow command';
     break;

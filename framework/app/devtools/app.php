@@ -63,7 +63,6 @@ class APP {
     }
 
     public static function components(){
-        echo "ok";
         Component::action(array_slice(self::$args,2));
     }
 

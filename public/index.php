@@ -11,3 +11,6 @@ require __DIR__ . '/../app.php';
 // ob_clean();
 // and the response successfully stored in the $output variable
 // include a php file from the app and config the output
+
+// uncomment this lines of code is you want to use slots
+// ViewSlot::render($output);

@@ -10,9 +10,9 @@ foreach($dirs as $dir){
         $ename = explode('/',$dir);
         $ename = $ename[array_key_last($ename)];
         if(file_exists($ipath)){
-            if(!isset($GLOBALS['e_req_disabled'])){
+            if(!isset($GLOBALS['e_req_enabled'])){
                 include_once $ipath;
-            } else if(!in_array($ename,$GLOBALS['e_req_disabled'])){
+            } else if(in_array($ename,$GLOBALS['e_req_enabled'])){
                 include_once $ipath;
             }
         } 

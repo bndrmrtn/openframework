@@ -9,7 +9,7 @@ _makeenv([
 // Production URL
 'PRODUCTION_URL' => 'http://localhost:7000',
 // Development mode
-'APP_DEV' => true,
+'APP_DEV' => true, // false by default
 // Use view
 'USE_VIEW' => true, // true by default
 // Authentication
@@ -21,7 +21,7 @@ _makeenv([
 'DB_NEED_CONNECTION' => false,
 'DB_HOST' => '127.0.0.1',
 'DB_PORT' => 3306,
-'DB_USER' => 'root',
+'DB_USER' => '',
 'DB_PASSWORD' => '',
 'DB_NAME' => '',
 // New file storage path
