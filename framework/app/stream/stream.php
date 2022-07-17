@@ -6,7 +6,7 @@ if($route == ''){
     $route = 'app';
 }
 
-$router = new Router(controller::getRoutes(),ROOT,$route);
+$router = new Router(Route::getArray(),ROOT,$route);
 
 Objects::save($router);
 
