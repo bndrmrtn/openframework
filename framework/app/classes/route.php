@@ -7,7 +7,14 @@ class Route {
     public static function add($path,$req_file,$allow = true,$custom_no_auth_file = NULL,$other_prms = []){
         $type = '';
         if(!self::$simple) $type = '/[any]';
-        self::$routes[$path . $type] = array_merge(['from' => $req_file,'allow' => $allow,'cnlog'=>$custom_no_auth_file],$other_prms);
+        
+        if($path != '/'){
+            if(str_starts_with($path,'/')) $path = substr($path,1);
+            if(str_ends_with($path,'/')) $path = substr($path,0,-1);
+        }
+
+        $created_path = $path . $type;
+        self::$routes[$created_path] = array_merge(['from' => $req_file,'allow' => $allow,'cnlog'=>$custom_no_auth_file],$other_prms);
     }
 
     public static function group($same_path,array $routes,$same_dir = NULL,$same_allow = true,$same_custom_no_auth_file = NULL){

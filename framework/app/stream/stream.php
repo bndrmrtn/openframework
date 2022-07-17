@@ -3,7 +3,7 @@
 $route = strtok(substr($_SERVER['REQUEST_URI'],1),'?');
 
 if($route == ''){
-    $route = 'app';
+    $route = '/';
 }
 
 $router = new Router(Route::getArray(),ROOT,$route);

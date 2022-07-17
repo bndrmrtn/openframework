@@ -29,7 +29,7 @@ class Router {
                 return $_REQUEST["route"];
             }
         } else {
-            return "app";
+            return "/";
         }
     }
 
@@ -45,12 +45,9 @@ class Router {
                 return $this->url;
             }
         } else {
-            return "app";
+            return "/";
         }
     }
-
-    
-
 
     public function stream($custom = false,$rt_array = false){
         $allow = false;
@@ -59,7 +56,7 @@ class Router {
             //get the route with or without the last /
             if(isset($this->rf[$this->route()]) || isset($this->rf[substr($this->route(), 0, -1)])){
                 //get the path without the /
-                $path = (substr($this->route(), -1) == "/") ? substr($this->route(), 0, -1) : $this->route();
+                $path = (substr($this->route(), -1) == "/" && !isset($this->rf[$this->route()])) ? substr($this->route(), 0, -1) : $this->route();
                 if(isset($this->rf[$path])){
                     if(isset($this->rf[$path]["allow"])){
                         $allow = $this->rf[$path]["allow"];
