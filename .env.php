@@ -14,6 +14,8 @@ _makeenv([
 'USE_VIEW' => true, // true by default
 // Authentication
 'USE_AUTH' => false, // false by default
+'AUTH_SESSION_SWITCH' => false, // use the auth with header Authorization
+// without sessions, use this mode for api-s or smth
 // SESSIONS
 'USE_SESSION' => false,
 //'SESSION_NAME' => 'test_session_id', // configure the session name

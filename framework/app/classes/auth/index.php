@@ -17,17 +17,22 @@ class Auth {
     private static $has_errors = false;
     private static $errors = [];
     private static $auth_error = NULL;
+    private static $use_sessions = true;
     
     public static function setup(){
         $config = require FRAMEWORK . '/config/auth.php';
         if(!_env('USE_SESSION')){
-            die('Authentication requires sessions');
+            self::sessionSwitch(false);
         } else if(!_env('DB_NEED_CONNECTION')){
             die('Authentication requires database connection');
         }
         self::$config = $config;
         self::$usable = true;
         self::autologin();
+    }
+
+    public static function sessionSwitch(bool $enable){
+        self::$use_sessions = $enable;
     }
 
     public static function getTableName(){
@@ -61,6 +66,10 @@ class Auth {
         return;
     }
 
+    public static function Token($token){
+        return self::autologin();
+    }
+
     private static function safeLogin($login){
         $table = self::$config['table'];
         $select = DB::select('*',$table,$login,NULL,'0',1);
@@ -85,7 +94,12 @@ class Auth {
 
     private static function storeSession($token){
         self::$token = $token;
-        $_SESSION[self::$skey] = $token;
+        if(self::$use_sessions) $_SESSION[self::$skey] = $token;
+    }
+
+    public static function getSessionToken(){
+        if(self::$token) return self::$token;
+        return false;
     }
 
     private static function useHash($pw_col,$data){
@@ -109,7 +123,7 @@ class Auth {
     }
 
     public static function user_session($custom_key = false){
-        if(array_count_values(self::$user_session) > 0){
+        if(count(self::$user_session) > 0){
             $user_session = self::$user_session;
             if($custom_key){
                 if($custom_key == 'user'){
@@ -121,11 +135,11 @@ class Auth {
             self::is_loggedin();
             self::user_session($custom_key);
         }
-        return false;
+        return [];
     }
 
     public static function user($custom_key = false){
-        if(array_count_values(self::$user) > 0){
+        if(count(self::$user) > 0){
             $user = self::$user;
             if($custom_key){
                 if($custom_key == 'user'){
@@ -155,25 +169,31 @@ class Auth {
         if(!self::$autologin) return;
         self::$user = [];
         self::$loggedin = false;
-        if(isset($_SESSION[self::$skey])){
+        $login = false;
+        if(self::$use_sessions && isset($_SESSION[self::$skey])){
             $login = Login::token($_SESSION[self::$skey]);
-            if($login != false){
-                self::$user_session = $login;
-                self::$user = self::getByName(self::user_session('user'));
-                if(count(self::$user) != 0){
-                    self::$loggedin = true;
-                }
-            } else {
-                unset($_SESSION[self::$skey]);
-            }
+        } else if(isset(headers()['Authorization'])){
+            $token = headers()['Authorization'];
+            $login = Login::token($token);
         }
+        if($login != false){
+            self::$token = $login['token'];
+            self::$user_session = $login;
+            self::$user = self::getByName(self::user_session('user'));
+            if(count(self::$user) != 0){
+                self::$loggedin = true;
+            }
+        } else if(static::$use_sessions) unset($_SESSION[self::$skey]);
+        else self::$loggedin = false;
         self::$autologin = false;
     }
 
     public static function logout(){
-        if(isset($_SESSION[self::$skey])){
+        if(self::$use_sessions && isset($_SESSION[self::$skey])){
             Login::destroy($_SESSION[self::$skey]);
             unset($_SESSION[self::$skey]);
+        } else {
+            Login::destroy(self::$token);
         }
         return true;
     }
@@ -252,6 +272,13 @@ class Auth {
         $select = DB::_select('SELECT COUNT(*) as total FROM ' . self::getTableName() . ' WHERE ' . $where . ' LIMIT 1',$vals,[0]);
         if($select['total'] == 0) return true;
         self::$auth_error = 'already-taken';
+        return false;
+    }
+
+    public static function errors_array(){
+        if(self::$has_errors){
+            return self::$errors;
+        }
         return false;
     }
 

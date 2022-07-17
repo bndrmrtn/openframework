@@ -46,16 +46,6 @@ controller::loadDB();
 controller::loadApp();
 
 /**
- * the headers stored in the $_H variable
- */
-$_H = apache_request_headers();
-
-/**
- * use it everywhere in the application
- */
-global $_H;
-
-/**
  * in this file you could globally configure the application
  * may used for json apis to change the header or smth
  */
