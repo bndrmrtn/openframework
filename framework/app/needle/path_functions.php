@@ -1,7 +1,7 @@
 <?php
 
 function startStrSlash($str){
-    if(str_starts_with('/',$str)){
+    if(str_starts_with($str,'/')){
         return $str;
     }
     return '/' . $str;
@@ -21,4 +21,8 @@ function assets($path){
 
 function routes($path){
     return ROOT . '/routes' . startStrSlash($path);
+}
+
+function url($path = '/'){
+    return BASE_URL . startStrSlash($path);
 }

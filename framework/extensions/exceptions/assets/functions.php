@@ -10,6 +10,10 @@ function check_for_fatal()
 }
 
 function display_error(Exception $e){
+    if(!_env('APP_DEV',false)){
+        require __DIR__ . '/../edata/server_error_public.php';
+        exit;
+    }
     echo "<!--\n";
     var_dump($e);
     echo "-->\n";
@@ -25,37 +29,52 @@ function display_error(Exception $e){
 
     if ($handle) {
         while (($line = fgets($handle)) !== false && $current_line <= $maxline) {
+            //$code .= $line;
             $current_line++;
             if($current_line >= $minline){
                 if($current_line != $eline){
                     $file_data .= highlightText($line) . "\n";
-                    $lines .= $current_line . "\n";
+                    $lines .= '&nbsp;&nbsp;' . $current_line . "&nbsp;\n";
                 } else {
                     $file_data .= '<span class="data-error">' . ($line) . '</span>';
-                    $lines .= '<span class="error-line">' . $current_line . "</span>\n";
+                    $lines .= '<span class="error-dot"><span style="color:red;">&#x25CF;</span>&nbsp;' . $current_line . "&nbsp;</span>\n";
                 }
             }
         }
+        /*$code = highlightText($code);
+        $code = explode('<br />',$code);
+        $file_data = '';
+        foreach($code as $line => $data){
+            $line++;
+            if($line >= $minline && $line <= $maxline){
+                if($line != $eline){
+                    $file_data .= $data . "\n";
+                    $lines .= '&nbsp;&nbsp;' . $line . "&nbsp;\n";
+                } else {
+                    var_dump($data . '<br/>');
+                    $file_data .= '<span class="data-error">' . ($data) . '</span>' . "\n";
+                    $lines .= '<span class="error-dot"><span style="color:red;">&#x25CF;</span>&nbsp;' . $line . "&nbsp;</span>\n";
+                }
+            }
+        }*/
+        //var_dump($file_data);exit;
 
         fclose($handle);
     }
     
     $message = $e->getMessage();
-
     require __DIR__ . '/../edata/index.php';
 }
 
 function log_error( $num, $str, $file, $line, $context = null ){
     $e = new ErrorException( $str, 0, $num, $file, $line );
-    if(_env('APP_DEV',false)){
-        display_error($e);
-    } else {
+    if(!_env('APP_DEV',false)){
         $message = date('Y-m-d H:i:s') . "\nType: " . get_class( $e ) . "; Message: {$e->getMessage()}; File: {$e->getFile()}; Line: {$e->getLine()};\n";
         $logfile = __DIR__ . "/../logs/exception-" . date('Y-m-d'); 
         file_put_contents($logfile, $message . PHP_EOL, FILE_APPEND );
-        echo '500';
-        exit;
     }
+    display_error($e);
+    exit;
 }
 
 // highlight the text in the error

@@ -8,8 +8,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     margin:0;
     padding:0;
-    background-color: #281c2c;
-    background-image: linear-gradient(to bottom left, #281c2c , #38233f);
+    background-color:#30313e;
     width: 100%;
     height: 100vh;
     color:white;
@@ -17,16 +16,18 @@ body {
 .data-code {
     font-size: 18px;
     padding: 15px;
-    background-color: black;
+    background-color: #202029;
     width: 100%;
     overflow-y: scroll;
+    border-radius: 10px;
 }
 
 .data-lines {
     font-size: 18px;
     padding: 15px;
-    background-color: black;
-    border-right:2px solid gray;
+    background-color: #202029;
+    border-right:2px solid #191927;
+    border-bottom-left-radius: 10px;
 }
 
 .data-error {
@@ -50,7 +51,23 @@ body {
 
 .filename {
     color:gray;
-    background-color: #222;
+    background-color: #191927;
     padding:10px;
     margin-bottom: -20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.file-code-box {
+    border-radius: 0;
+    border-bottom-right-radius: 10px;
+}
+
+.error-line-w-dot {
+    color:white;
+}
+
+.code-line {
+    display: inline-block;
+    width: max-content;
 }

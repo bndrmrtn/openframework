@@ -2,4 +2,4 @@
 
 // custom routes for auth
 
-controller::addRoute('auth/[any]','*custom:' . FRAMEWORK . '/auth/handle/index');
+Route::add('auth/[any]','*custom:' . FRAMEWORK . '/auth/handle/index');

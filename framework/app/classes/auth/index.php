@@ -118,7 +118,7 @@ class Auth {
     }
 
     public static function is_loggedin(){
-        if(self::$autologin) self::autologin();
+        self::autologin();
         return self::$loggedin;
     }
 
@@ -147,8 +147,7 @@ class Auth {
                 }
             }
             return $user;
-        } else {
-            self::is_loggedin();
+        } else if(self::is_loggedin()) {
             self::user($custom_key);
         }
         return false;
@@ -183,8 +182,11 @@ class Auth {
             if(count(self::$user) != 0){
                 self::$loggedin = true;
             }
-        } else if(static::$use_sessions) unset($_SESSION[self::$skey]);
-        else self::$loggedin = false;
+        } else if(static::$use_sessions){
+            unset($_SESSION[self::$skey]);
+        } else {
+            self::$loggedin = false;
+        }
         self::$autologin = false;
     }
 
@@ -245,7 +247,6 @@ class Auth {
                 return;
             }
             self::$has_errors = true;
-            //dd($data['errors']);
             self::$errors = $data['errors'];
             return false;
         } else {

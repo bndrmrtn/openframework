@@ -1,9 +1,14 @@
 <?php
 
-require_once __DIR__ . '/config.php';
+$_dbfiles = [
+    '/config.php',
+    '/assets/db.php',
+    '/assets/sql.php',
+    '/assets/table.php',
+];
 
-require_once __DIR__ . '/assets/db.php';
-
-require_once __DIR__ . '/assets/sql.php';
+foreach($_dbfiles as $file){
+    require __DIR__.$file;
+}
 
 DB::createConnection($dbconfig);

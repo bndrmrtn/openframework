@@ -45,6 +45,7 @@ class Router {
             }
         };
         xhttp.open(type, url, true);
+        xhttp.setRequestHeader('OF-Request', 'RouterJS')
         xhttp.send(data);
     };
  

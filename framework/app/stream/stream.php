@@ -8,6 +8,8 @@ if($route == ''){
 
 $router = new Router(Route::getArray(),ROOT,$route);
 
+
+
 Objects::save($router);
 
 $stream = $router->stream();
@@ -20,6 +22,7 @@ if($stream == "404-NotFound"){
 else if($stream == "401-Unauthorized") {
     MErrors::Unauthorized();
 }
+
 if(file_exists($stream)){
     define('IMPORTVIEW',$GLOBALS['router']['imports']['view']);
     require $stream;
