@@ -44,6 +44,14 @@ class AppSetMode {
             self::deleteDir($cpfolder);
         }
 
+        file_put_contents(ROOT . '/assets/errors/index.php','<?php
+        Header::statuscode($code);
+        
+        echo json_encode([
+            \'code\'=>$code,
+            \'error\' => $title,
+        ]);');
+
         _e( "API mode successfully configured!");
 
         self::wrinteInfo();
