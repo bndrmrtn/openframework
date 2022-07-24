@@ -49,7 +49,7 @@ class AppSetMode {
         
         echo json_encode([
             \'code\'=>$code,
-            \'error\' => $title,
+            \'message\' => $title,
         ]);');
 
         _e( "API mode successfully configured!");
