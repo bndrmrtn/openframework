@@ -7,7 +7,6 @@ if(Auth::is_loggedin()) location(BASE_URL);
 // if the request is post, the auth will login with
 // the requested credentials
 if(post(true)) Auth::tryLogin(function(){
-
     //if the login successful the user redirected to the home page
     return location(BASE_URL);
     

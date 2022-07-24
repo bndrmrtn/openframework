@@ -33,7 +33,7 @@ function display_error(Exception $e){
             $current_line++;
             if($current_line >= $minline){
                 if($current_line != $eline){
-                    $file_data .= highlightText($line) . "\n";
+                    $file_data .= '<span>' . highlightText($line) . "</span>\n";
                     $lines .= '&nbsp;&nbsp;' . $current_line . "&nbsp;\n";
                 } else {
                     $file_data .= '<span class="data-error">' . ($line) . '</span>';
@@ -61,7 +61,6 @@ function display_error(Exception $e){
 
         fclose($handle);
     }
-    
     $message = $e->getMessage();
     require __DIR__ . '/../edata/index.php';
 }

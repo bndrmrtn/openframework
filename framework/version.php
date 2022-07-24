@@ -13,4 +13,4 @@ if(version_compare(PHP_VERSION, $_V['PHP_MIN_REQUIRED'], '<')){
     exit;
 }
 
-global $_V;
+define('VERSION', $_V['@'] . '.' . $_V['.']);

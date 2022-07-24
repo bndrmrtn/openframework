@@ -14,6 +14,8 @@ const ROOT =__DIR__;
 
 const FRAMEWORK = ROOT . '/framework';
 
+require FRAMEWORK . '/version.php';
+
 // require all the extensions
 // disable the not required extensions
 $GLOBALS['e_req_enabled'] = [ 'env' ];

@@ -1,6 +1,7 @@
 <?php
 
 $tools = array(
+    '/functions.php',
     '/app.php',
     '/components/index.php',
     '/updater/updater.php',

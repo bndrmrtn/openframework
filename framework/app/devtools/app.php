@@ -45,7 +45,7 @@ class APP {
     public static function startDevServer($port){
         $host = 'localhost:' . $port;
         self::open('http://' . $host);
-        shell_exec('php -S ' . $host . ' -t '. ROOT . '/public/');
+        shell_exec('php -S ' . $host . ' -t ' . ROOT . '/public/');
     }
 
     public static function  open(string $url): void{

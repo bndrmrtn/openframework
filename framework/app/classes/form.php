@@ -1,7 +1,9 @@
 <?php
 
 class Form {
-    protected $data = [];
+
+    protected $formdata = [];
+    public $data;
 
     public function __construct($method = 'POST'){
         if($_SERVER['REQUEST_METHOD'] != $method){
@@ -10,7 +12,7 @@ class Form {
     }
 
     public function bindData($data){
-        $this->data = $data;
+        $this->formdata = $data;
     }
 
     public function validate(Validation $v){
@@ -18,11 +20,12 @@ class Form {
             'valid' => NULL,
             'errors' => NULL,
         ];
-        if($v->is_valid($this->data)){
+        if($v->is_valid($this->formdata)){
             $data['valid'] = $v->getvalid();
         } else {
             $data['errors'] = $v->geterrors();
         }
+        $this->data = $data;
         return $data;
     }
 

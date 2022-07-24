@@ -26,6 +26,7 @@ else if($stream == "401-Unauthorized") {
 if(file_exists($stream)){
     define('IMPORTVIEW',$GLOBALS['router']['imports']['view']);
     require $stream;
+    if(JSON::autosend(false,true)) JSON::send();
 } else {
     Header::json();
     Header::statuscode(500);
