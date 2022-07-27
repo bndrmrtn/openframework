@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace DEV;
 
-class Component {
+class Components extends ClassROOT {
 
     private static $root = FRAMEWORK . '/extensions/use_components/data';
     private static $clone = FRAMEWORK . '/extensions/use_components/data/clone';

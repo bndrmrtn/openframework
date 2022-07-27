@@ -1,8 +1,25 @@
 <?php
 
-namespace App;
+namespace DEV;
 
-class AppSetMode {
+use \HTTP;
+
+class Mode extends ClassROOT {
+
+    public static function set($mode){
+        if(count($mode) == 1){
+            $mode = $mode[0];
+            if($mode == 'api'){
+                self::makeAPI();
+            } else if($mode == 'api:auth'){
+                self::downloadAuth();
+            } else {
+                _e( 'Unknow command :/', true );
+            }
+        } else {
+            _e( 'Unknow command :/', true );
+        }
+    }    
 
     public static function makeAPI(){
         
@@ -29,23 +46,24 @@ class AppSetMode {
 
         _e( "Copying files to backups/{$cpfolderspec} " );
 
-        self::copy_directory(SERVE_DIR,$cpfolder);
+        copy_directory(SERVE_DIR,$cpfolder);
 
         _e( "Deleting the original serve directory... " );
 
-        self::deleteDir(SERVE_DIR);
+        deleteDir(SERVE_DIR);
 
         _e( "Copying SERVER files to the new serve directory... " );
-        self::copy_directory($cpfolder . '/server',SERVE_DIR);
+        copy_directory($cpfolder . '/server',SERVE_DIR);
 
         _e( "\e[1;31mBackup files cannot be restored\e[0m" );
         if(choice('Do you want to clean the current backed up files?')){
             _e( "Cleaning the backup directory... " );
-            self::deleteDir($cpfolder);
+            deleteDir($cpfolder);
         }
 
         file_put_contents(ROOT . '/assets/errors/index.php','<?php
         Header::statuscode($code);
+        Header::json();
         
         echo json_encode([
             \'code\'=>$code,
@@ -63,14 +81,12 @@ class AppSetMode {
     public static function downloadAuth(){
         if(!defined('BASE_URL')) define('BASE_URL', 'http://localhost:7000');
 
-        gclss('http');
-
         _e("Downloading data from .dev server");
 
         $tmp = tmpfolder();
 
-        $post = \HTTP::post(API . '/?$=auth',[
-            'Authorization' => API_KEY,
+        $post = HTTP::post(App::api('url') . '/?$=auth',[
+            'Authorization' => App::api('key'),
         ],[
             'type' => 'json',
             'tmp' => $tmp,
@@ -81,12 +97,12 @@ class AppSetMode {
             if(isset($post['data']['eval'])){
                 eval($post['data']['eval']);
                 if(choice('Are you sure you want to replace the auth with the version developed for api?')){
-                    self::deleteDir(FRAMEWORK . '/auth');
-                    self::copy_directory($tmp,FRAMEWORK . '/auth');
-                    self::deleteDir(ROOT . '/.tmp');
+                    deleteDir(FRAMEWORK . '/auth');
+                    copy_directory($tmp,FRAMEWORK . '/auth');
+                    deleteDir(ROOT . '/.tmp');
                 } else {
                     _e( "Deleting /.tmp" );
-                    if(is_dir(ROOT . '/.tmp')) self::deleteDir(ROOT . '/.tmp');
+                    if(is_dir(ROOT . '/.tmp')) deleteDir(ROOT . '/.tmp');
                 }
             } else if(isset($post['errors'])){
                 _e( "Errors:" );
@@ -111,47 +127,7 @@ class AppSetMode {
         _e( "In the /.env.php file, set the USE_VIEW to false" );
         _e( "If you want to use JSON headers instead html, change the\nHeader::html() to Header::json() in the framework/app/application.php file!" );
         _e( "Thanks for using OpenFramework, build something cool ;)" );
-        _e( "More info: " . API . '/?r=/dev/api_configuration/' . "\n" );
-    }
-
-    private static function copy_directory( $source, $destination ) {
-        if ( is_dir( $source ) ) {
-        @mkdir( $destination );
-        $directory = dir( $source );
-        while ( FALSE !== ( $readdirectory = $directory->read() ) ) {
-            if ( $readdirectory == '.' || $readdirectory == '..' ) {
-                continue;
-            }
-            $PathDir = $source . '/' . $readdirectory; 
-            if ( is_dir( $PathDir ) ) {
-                self::copy_directory( $PathDir, $destination . '/' . $readdirectory );
-                continue;
-            }
-            copy( $PathDir, $destination . '/' . $readdirectory );
-        }
-
-        $directory->close();
-        }else {
-            copy( $source, $destination );
-        }
-    }
-
-    private static function deleteDir($dirPath) {
-        if (! is_dir($dirPath)) {
-            throw new InvalidArgumentException("$dirPath must be a directory");
-        }
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-            $dirPath .= '/';
-        }
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                self::deleteDir($file);
-            } else {
-                unlink($file);
-            }
-        }
-        rmdir($dirPath);
+        _e( "More info: " . App::api('url') . '/?r=/dev/api_configuration/' . "\n" );
     }
 
 }

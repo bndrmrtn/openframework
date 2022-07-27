@@ -1,36 +1,28 @@
 <?php
 
-const API = 'https://open.mrtn.vip/.dev';
-// to get an api key, create an opendev account
-// create key here: https://open.mrtn.vip/auth/register
-const API_KEY = 'xxx-xxx-xxx-xxx';
+error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE ^ E_DEPRECATED); 
 
-// Application development
-/**
- * use php dev serve function to create a development server for your application
- */
+const ROOT = __DIR__;
 
-const ROOT =__DIR__;
-
-const FRAMEWORK = ROOT . '/framework';
+const FRAMEWORK = __DIR__ . DIRECTORY_SEPARATOR . 'framework';
 
 require FRAMEWORK . '/version.php';
 
-// require all the extensions
-// disable the not required extensions
-$GLOBALS['e_req_enabled'] = [ 'env' ];
-require FRAMEWORK . '/extensions/e_configdir__/index.php';
+const DEVROOT = __DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'devtools';
 
-// require the controller to load the database
-require FRAMEWORK . '/config/loaders/controller.php';
+require FRAMEWORK . '/app/before_initialize/index.php';
 
-controller::loadDB();
+$app = require DEVROOT . '/app.php';
 
-// require the devtools
-require FRAMEWORK . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'loadfiles.php';
+$app->initialize(/* command line args */ $argv,/* load specific extension */[ 'env' ]);
 
-use App\APP;
+$_config = [
+    'api' => [
+        'url' => 'https://open.mrtn.vip/.dev',
+        'key' => 'xxxx-xxxx-xxxx',
+    ],
+];
 
-APP::initialize($argv);
+$app->config($_config);
 
-require FRAMEWORK . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'devtools' . DIRECTORY_SEPARATOR . 'loader.php';
+$app->handleCmd();

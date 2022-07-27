@@ -19,6 +19,10 @@ class DB {
         }
     }
 
+    public static function connected():bool {
+        return self::$connected;
+    }
+
     public static function select($select = "*",$from = 'test',$where_array = NULL,$order = NULL,$array_key = NULL,$limit = NULL,$offset = NULL,array $like = NULL,array $or = NULL){
         if(self::$connected){
             if($where_array != NULL){
