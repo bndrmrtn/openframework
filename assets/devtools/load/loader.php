@@ -6,7 +6,7 @@ namespace DEV;
 
 class DEVLoader {
 
-    private static $from_app_classes = [ 'http' ];
+    private static $from_app_classes = [ 'route', 'http' ];
 
     public static function load(){
         require __DIR__ . '/mainclasshandler.php';

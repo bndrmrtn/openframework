@@ -1,3 +1,5 @@
 <?php
 
-$is_loggedin = Auth::is_loggedin();
+function loggedin() {
+    return Auth::is_loggedin();
+}

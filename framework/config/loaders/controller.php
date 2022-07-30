@@ -11,6 +11,7 @@ class controller {
         require FRAMEWORK . '/app/session.php';
         if(_env('USE_AUTH',false)) Auth::setup();
         
+        include_once routes('auth.php');
         require routes('simple.php');
         Route::setType(false);
         require routes('routed.php');
