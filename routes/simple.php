@@ -6,8 +6,6 @@
 
 Route::add('/','app',/*loggedin()*/);
 
-Route::inGroup('test');
-
 // Authentication routes
 
 if(_env('USE_AUTH',false) && file_exists(FRAMEWORK . '/auth/routes.php')){

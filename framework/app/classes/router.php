@@ -85,13 +85,13 @@ class Router {
                             header("Location: " . $this->rf[$path]["_location"]);
                             echo "The page redirected here: " . $this->rf[$path]["_location"];exit;
                         } else {
-                            return "404-NotFound";
+                            return $this->checkError("404-NotFound");
                         }
                     } else {
-                        return "401-Unauthorized";
+                        return $this->checkError("401-Unauthorized");
                     }
                 } else {
-                    return "404-NotFound";
+                    return $this->checkError("404-NotFound");
                 }
             //if the route is /[any]
             } else {
@@ -140,11 +140,11 @@ class Router {
                                 );
                             }
                         } else {
-                            return "401-Unauthorized";
+                            return $this->checkError("401-Unauthorized");
                         }
                     }
                 }
-                return "404-NotFound";
+                return $this->checkError("404-NotFound");
             }
         //if the view is custom
         } else if($custom == true){
@@ -177,4 +177,20 @@ class Router {
         }
         return $new;
     }
+
+    private function checkError($str){
+        if($str == '404-NotFound' && isset($this->rf['E:404'])){
+            Header::statuscode(404);
+            $route = $this->rf['E:404'];
+            $view = SERVE_DIR ."/view/simple/".$route['from'].".php";
+            $GLOBALS['router'] = [
+                'imports'=>[
+                    'view'=>$view
+                ]
+            ];
+            return $view;
+        }
+        return $str;
+    }
+
 }

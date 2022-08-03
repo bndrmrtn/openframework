@@ -2,13 +2,13 @@
 
 $route = strtok(substr($_SERVER['REQUEST_URI'],1),'?');
 
+$route = substr($route,URL_SUBSTR_COUNT);
+
 if($route == ''){
     $route = '/';
 }
 
 $router = new Router(Route::getArray(),ROOT,$route);
-
-
 
 Objects::save($router);
 
