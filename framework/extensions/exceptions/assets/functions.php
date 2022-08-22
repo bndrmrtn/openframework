@@ -6,6 +6,8 @@ function check_for_fatal()
     $error = error_get_last();
     if ( $error["type"] == E_ERROR ){
         log_error($error["type"], $error["message"], $error["file"], $error["line"]);
+    } else if($error['type'] == E_PARSE) {
+        log_error($error["type"], $error["message"], $error["file"], $error["line"]);
     }
 }
 

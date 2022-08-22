@@ -8,7 +8,7 @@ function xdump($data,$title = NULL,$json = true,$hightlight = true){
         if($hightlight) $text = highlightText($text);
         $re = '<div class="xdump-hightlighted">';
         if($title) $re .= "<h4 style='margin-bottom:-15px;'>{$title}</h4>";
-        $re .= '<div style="display: flex;"><pre class="data-code"><code>' . 
+        $re .= '<div style="display: flex;max-height:500px;overflow-y:scroll;"><pre class="data-code"><code>' . 
                 str_replace("\n","<br/>",$text) . 
         '</code></pre></div>';
         $re .= '</div>';

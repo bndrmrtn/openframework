@@ -29,6 +29,8 @@ ob_start();
         <?=xdump(apache_request_headers(),'Headers')?>
         <?=($_GET != []) ? xdump($_GET,'GET data') : '' ?>
         <?= (function_exists('post')) ? xdump(post(),'Post data') : '' ?>
+        <?= (session_status() != PHP_SESSION_NONE) ? xdump($_SESSION,'Session') : '' ?>
+        <?= xdump(array_map(function($str) { return str_replace(ROOT, '', $str); }, get_included_files()),'Included files') ?>
     </div>
     
 </body>
