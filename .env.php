@@ -14,8 +14,11 @@ _makeenv([
 // Development mode
 'APP_DEV' => true, // false by default
 
+// Always re-Render the views on Development mode
+'RERE_VIEWS' => false, // true by default
+
 // Use view
-'USE_VIEW' => true, // true by default
+'USE_VIEWS' => true, // true by default
 
 // Authentication
 'USE_AUTH' => false, // false by default
@@ -24,10 +27,10 @@ _makeenv([
 
 // SESSIONS
 'USE_SESSION' => false,
-//'SESSION_NAME' => 'test_session_id', // configure the session name
+//'SESSION_NAME' => 'my-session', // configure the session name
 
 // Database
-'DB_NEED_CONNECTION' => false,
+'USE_DB' => false,
 'DB_HOST' => '127.0.0.1',
 'DB_PORT' => 3306,
 'DB_USER' => '',
@@ -35,10 +38,14 @@ _makeenv([
 'DB_NAME' => '',
 
 // New file storage path
-'STORE_PATH' => FRAMEWORK . '/app/storage', // default
+'STORE_PATH' => ROOT . '/app/storage',
 ]);
 
 /**
  * to use an env variable use the _env function
  * like $name = _env('NAME',here you could add an alternative value if it's null and than return this)
+ */
+
+/**
+ * use the 'php dev production on' command to generate a production mode env file
  */

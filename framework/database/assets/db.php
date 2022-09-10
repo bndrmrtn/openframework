@@ -5,6 +5,7 @@ class DB {
     protected static $PDO;
     protected static $connected = false;
     private static $querys = [];
+    private static bool $logger_on = false;
 
     public static function createConnection($config){
         if($config['createconnection']){
@@ -88,9 +89,9 @@ class DB {
                     $sql->bindValue(":$key",$value);
                 }
             }
+            self::log_query($sql_str, [ 'where' => $where_array, 'or' => $or ]);
             try {
                 $sql->execute();
-                self::log_query($sql_str);
             } catch(Exception $e){
                 return array("error"=>$e->getMessage());
             }
@@ -128,7 +129,7 @@ class DB {
         }
         try {
             $insert = $sql->execute();
-            self::log_query($sql_str);
+            self::log_query($sql_str, $datas);
             return $insert;
         }
         catch(Exception $e){
@@ -137,9 +138,18 @@ class DB {
     }
 
     public static function update($table,$set_array,$where,$wval = NULL){
-        $set = array_key_first($set_array);
-        $val = $set_array[$set];
-        $run = "UPDATE $table SET $set = :$set WHERE ";
+        //$set = array_key_first($set_array);
+        //$val = $set_array[$set];
+        //$run = "UPDATE $table SET $set = :$set WHERE ";
+        $sets = '';
+        foreach($set_array as $key => $val){
+            if(array_key_last($set_array) != $key){
+                $sets .= " $key = :$key,";
+            } else {
+                $sets .= " $key = :$key";
+            }
+        }
+        $run = 'UPDATE ' . $table . ' SET ' . $sets . ' WHERE ';
         if(!is_array($where) && $wval != NULL){
             $run .= "$where = :$where";
         } else {
@@ -152,7 +162,9 @@ class DB {
             }
         }
         $sql = self::$PDO->prepare($run);
-        $sql->bindValue(":$set",$val);
+        foreach($set_array as $key => $val){
+            $sql->bindValue(":$key",$val);
+        }
         if(!is_array($where) && $wval != NULL){
             $sql->bindValue(":$where",$wval);
         } else {
@@ -160,9 +172,9 @@ class DB {
                 $sql->bindValue(":$i",$w);
             }
         }
+        self::log_query($run, ['set' => $set_array, 'where' => $where ]);
         try {
             $u = $sql->execute();
-            self::log_query($run);
             return $u;
         } catch(Exception $e){
             return array("error"=>$e->getMessage());
@@ -193,7 +205,7 @@ class DB {
         }
         try {
             $u = $sql->execute();
-            self::log_query($run);
+            self::log_query($run, $where);
             return $u;
         } catch(Exception $e){
             return array("error"=>$e->getMessage());
@@ -209,7 +221,7 @@ class DB {
         }
         try {
             $sql->execute();
-            self::log_query($sql_data);
+            self::log_query($sql_data, $value_array);
         } catch(Exception $e){
             return array("error"=>$e->getMessage());
         }
@@ -246,12 +258,27 @@ class DB {
         return $count > 0;
     }
 
-    private static function log_query($query){
-        self::$querys['log-' . microtime(true)] = $query;
+    public static function all(string $table,array $where = []){
+        return self::select('*',$table,$where);
+    }
+
+    private static function log_query($query, $binds = NULL){
+        if(self::$logger_on){
+            self::$querys['log-' . microtime(true)] = [
+                'query' => $query,
+                'binded-data' => $binds,
+            ];
+        }
+    }
+
+    public static function logger(bool $on = true){
+        self::$logger_on = $on;
     }
 
     public static function get_querys(){
-        return self::$querys;
+        $q = self::$querys;
+        self::$querys = [];
+        return $q;
     }
 
 }

@@ -1,4 +1,29 @@
 <?php
+
+$rurl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+$includes = array_map(function($str) { return str_replace(ROOT, '', $str); }, get_included_files());
+
+if(getallheaders()['Accept'] == 'application/json'){
+
+    $error = [
+        'exception' => [
+            'type' => $type,
+            'line' => $eline,
+            'message' => $message,
+            'file' => $file,
+        ],
+        'requested-url' => $rurl,
+        'session' => $_SESSION,
+        'includes' => $includes,
+        'render_time' => getrtime(),
+    ];
+
+    echo json_encode($error,JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    exit;
+
+} else {
+
 ob_start();
 ?>
 <head>
@@ -25,17 +50,18 @@ ob_start();
         </div>
         <hr />
         <h2>Request</h2>
-        <?=xdump((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",'URL',false,false)?>
+        <?=xdump($rurl,'URL',false,false)?>
         <?=xdump(apache_request_headers(),'Headers')?>
         <?=($_GET != []) ? xdump($_GET,'GET data') : '' ?>
         <?= (function_exists('post')) ? xdump(post(),'Post data') : '' ?>
         <?= (session_status() != PHP_SESSION_NONE) ? xdump($_SESSION,'Session') : '' ?>
-        <?= xdump(array_map(function($str) { return str_replace(ROOT, '', $str); }, get_included_files()),'Included files') ?>
+        <?= xdump($includes,'Included files') ?>
+        <?= xdump(getrtime() . 's','Render Time',false,true) ?>
     </div>
-    
 </body>
 <?php
 $page = ob_get_contents();
-ob_get_clean();
+ob_get_clean(); 
 ?>
 <script>document.querySelector('html').innerHTML = atob('<?=base64_encode($page)?>');</script>
+<?php } ?>

@@ -1,0 +1,107 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #1b1c26;
+    height: 100vh;
+    font-family: sans-serif;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden
+}
+#particles-js {
+    height: 100%
+}
+.login-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 350px;
+    min-height: 200px;
+    border-radius: 10px;
+    padding: 40px;
+    box-sizing: border-box;
+    transition: .5s;
+    background-color: #34354a;
+}
+
+@media all and (max-width:25em){
+    .resize-form {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.user {
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 20px
+}
+h3 {
+    margin: 0;
+    padding: 0 0 20px;
+    color: white;
+    text-align: center;
+}
+.login-box input {
+    width: 100%;
+    margin-bottom: 20px
+}
+.login-box input[type="text"],
+.login-box input[type="email"],
+.login-box input[type="phone"],
+.login-box input[type="password"] {
+    border: none;
+    border-bottom: 2px solid #c6c6c6;
+    outline: none;
+    height: 40px;
+    color: #fff;
+    background: transparent;
+    font-size: 16px;
+    padding-left: 20px;
+    box-sizing: border-box;
+    transition: .3s;
+}
+
+.login-box input[type="text"]:focus,
+.login-box input[type="email"]:focus,
+.login-box input[type="phone"]:focus,
+.login-box input[type="password"]:focus {
+    border-bottom: 2px solid #565656;
+}
+
+.login-box input[type="text"]:hover,
+.login-box input[type="email"]:hover,
+.login-box input[type="phone"]:hover,
+.login-box input[type="password"]:hover {
+    border-bottom: 2px solid #565656;
+}
+
+.inputBox {
+    position: relative;
+}
+.inputBox span {
+    position: absolute;
+    top: 10px;color: #262626;
+}
+.login-box input[type="submit"] {
+    border: none;
+    outline: none;
+    height: 40px;
+    font-size: 16px;
+    background: #5c2586;
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer
+}
+.login-box a {
+    color: #262626;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+}
+a:hover {
+    color: #00ffff;
+}

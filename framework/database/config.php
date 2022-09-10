@@ -1,6 +1,6 @@
 <?php
 
-$dbconfig['createconnection'] = _env('DB_NEED_CONNECTION',false);
+$dbconfig['createconnection'] = _env('USE_DB',false);
 $dbconfig['host'] = _env('DB_HOST','localhost');
 $dbconfig['port'] = _env('DB_PORT',3306);
 $dbconfig['user'] = _env('DB_USER','root');

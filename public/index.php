@@ -1,16 +1,22 @@
 <?php
 
-define('M_START_TIME',microtime(true));
+// use the 2 most important classes
+use Framework\App\Framework;
+use Framework\App\Request;
 
-// to edit the output before send:
-// ob_start();
+// define the application start time
+define('START_TIME', microtime(true));
 
-require __DIR__ . '/../app.php';
+define('F_MEM_USAGE',memory_get_usage());
 
-// $output = ob_get_contents();
-// ob_clean();
-// and the response successfully stored in the $output variable
-// include a php file from the app and config the output
-
-// uncomment this lines of code is you want to use slots
-// ViewSlot::render($output);
+// require the initializer tools and the whole app
+require __DIR__ . '/../framework/initialize.php';
+// load the framework
+Framework::load()->then(function(){
+    // when the framework loaded
+    // catch the requested data
+    Request::catch();
+    // load all routes and create a response by controllers
+    // and views
+    Framework::loadRoute();
+});

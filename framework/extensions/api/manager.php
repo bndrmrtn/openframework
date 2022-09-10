@@ -2,6 +2,4 @@
 
 include_once __DIR__ . DIRECTORY_SEPARATOR . 'cors' . DIRECTORY_SEPARATOR . 'index.php';
 
-cors([
-    'http://localhost:8080'
-]);
+cors(require ROOT . '/app/config/cors.php');

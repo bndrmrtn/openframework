@@ -31,8 +31,9 @@ body {
 }
 
 .data-error {
-    background-color: #c70d0d;
-    padding:3px;
+    color: white;
+    background-color:#c70d0dd8;
+    margin-left:-15px;
 }
 
 .error-line {
