@@ -20,6 +20,7 @@ class App {
                 require FRAMEWORK . '/app/helpers/' . $helper . '.php';
             }
         }
+        Serve::$config['port'] = _env('DEV_PORT', 7000);
     }
 
     protected static function mainCmd(){

@@ -29,9 +29,14 @@ class Auth extends Base {
             $config = require ROOT . '/app/config/auth.php';
             self::$salt = $config['salt'];
             unset($config['salt']);
-            if(!_env('USE_SESSION')){
-                self::sessionSwitch(false);
-            } else if(!_env('USE_DB')){
+            if(!_env('USE_SESSION', false)){
+                if(_env('AUTH_SESSION_SWITCH',false)){
+                    self::sessionSwitch(false);
+                } else {
+                    throw new \Exception('Authentication requires sessions or the session switch');
+                }
+            }
+            if(!_env('USE_DB', false)){
                 throw new \Exception('Authentication requires database connection');
             }
             self::$config = $config;
@@ -120,7 +125,7 @@ class Auth extends Base {
         return $data;
     }
 
-    private static function hash($password){
+    public static function hash($password){
         return hash('sha256',self::$salt['left'] . $password . self::$salt['right']);
     }
 

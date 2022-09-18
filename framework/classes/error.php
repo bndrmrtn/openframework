@@ -23,4 +23,13 @@ class Error {
         exit;
     }
 
+    public static function Custom($title = NULL,$message = NULL, $code = 500){
+        view('errors/index',[
+            'code' => $code,
+            'title' => $title ?: 'Something went wrong',
+            'message' => $message ?: 'Something wrong happened on the server',
+        ], $code);
+        exit;
+    }
+
 }

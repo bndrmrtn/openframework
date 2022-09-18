@@ -15,7 +15,7 @@ return array(
 
     'replace-tags-to' => array(
         '@else:' => 'else:',
-        '@_DELETE' => 'echo \'<input type="hidden" name="_method" value="delete">\''
+        '@CSRF' => 'echo \Framework\App\Security\Csrf::tokenInput()'
     ),
 
 );

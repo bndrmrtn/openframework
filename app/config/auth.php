@@ -1,13 +1,15 @@
 <?php
 
-/**
- * // simple hash function
- * function myHash( $password ){
- *  return hash('sha256','somesalt' . $password);
- * }
- * NOTE: create this funtion in the /framework/app/helpers/ folder
- * if you need a custom hash function
- */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+ *                                                                             *
+ *      simple hash function                                                   *
+ *      function myHash( $password ){                                          *
+ *          return hash('sha256','somesalt' . $password);                      *
+ *      }                                                                      *
+ *      NOTE: create this funtion in the /framework/app/helpers/ folder        *
+ *      if you need a custom hash function                                     *
+ *                                                                             *
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
 // the table used for users

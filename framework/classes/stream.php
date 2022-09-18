@@ -33,7 +33,8 @@ class Stream {
                 response()->{$stream['method']}($stream['call']);
             }
         } else {
-            redirect(route('auth.login'));
+            if(_env('USE_AUTH')) redirect(route('auth.login'));
+            redirect( '/' );
         }
     }
 

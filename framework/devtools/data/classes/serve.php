@@ -4,16 +4,34 @@ namespace DEV;
 
 class Serve extends ClassROOT {
 
-    private static $config = [
+    public static $config = [
         'port' => 7000,
         'host' => 'localhost',
     ];
+    private static $hoststore = FRAMEWORK . '/cache/dev/host.php';
 
-    public static function run(){
+    public static function run($custom_ports = false){
+        createPath(dirname(self::$hoststore));
+        
         headerPrintBg( 'Starting development server',true);
+        if(!$custom_ports){
+            if(file_exists(self::$hoststore)){
+                $saved_host_config = require self::$hoststore;
+                if(isset($saved_host_config['host']) && $saved_host_config['port']){
+                    if(choice("\n" . 'Do you want to use the previous settings? (' . $saved_host_config['host'] . ':' . $saved_host_config['port'] . ')')){
+                        self::$config = $saved_host_config;
+                    }
+                }
+            }
+        }
         self::createports(self::$config['port']);
         $host = static::$config['host'] . ':' . static::$config['port'];
         // self::browser('http://' . $host);
+        $host_data = [
+            'host' => static::$config['host'],
+            'port' => static::$config['port'],
+        ];
+        file_put_contents(self::$hoststore,'<?php return ' . var_export($host_data, true) . '; ?>');
         shell_exec('php -S ' . $host . ' -t ' . ROOT . '/public/');
     }
 
@@ -21,13 +39,13 @@ class Serve extends ClassROOT {
         $config = self::mkprops($data,true);
         if(isset($config['port'])) self::$config['port'] = $config['port'];
         if(isset($config['host'])) self::$config['host'] = $config['host'];
-        self::run();
+        self::run(true);
     }
 
     private static function createports($port = 7000){
         $ping = self::ping(self::$config['host'],$port,10);
         if($ping == 'down'){
-            _e( "\n" . 'Server url: http://localhost:' . $port . "\n" );
+            _e( "\n" . 'Server url: http://' . self::$config['host'] . ':' . $port . "\n" );
             self::$config['port'] = $port;
             return true;
         }

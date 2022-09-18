@@ -41,7 +41,7 @@ class Framework {
             // create a reflection to that class
             $reflected = new \ReflectionClass( $class );
             // and check if it's a framework base class
-            if( $reflected->isSubclassOf( 'Framework\Base\Base' ) ){
+            if( $reflected->isSubclassOf( 'Framework\Base\Base' ) && !$reflected->isAbstract() ){
                 // create a class instance without constructor
                 $instance = $reflected->newInstanceWithoutConstructor();
                 if(method_exists($instance,'classBooter')) {

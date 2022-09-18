@@ -201,7 +201,7 @@ class Route {
         $ex = new \Exception();
         $trace = $ex->getTrace();
         $final_call = $trace[1];
-        log_error(0,'Invalid route name',$final_call['file'],$final_call['line']);
+        log_error(0,'Invalid route name (' . $key . ')',$final_call['file'],$final_call['line']);
     }
 
     public static function find($key){

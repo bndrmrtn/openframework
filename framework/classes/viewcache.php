@@ -20,8 +20,10 @@ class View extends Base {
 
     public static function include(string $file){
 
+        $genTime = microtime(true);
+
         $view_file = startStrSlash($file) . '.php';
-        $cached_file = self::$store_dir . startStrSlash($file) . '.cache.php';
+        $cached_file = self::$store_dir . startStrSlash($file) . '.php';
 
         if(!file_exists($cached_file) || (_env('APP_DEV',false) && _env('RERE_VIEWS',false))){
             $view = self::$views_dir . $view_file;
@@ -45,7 +47,7 @@ class View extends Base {
             
             createPath(dirname($cached_file));
 
-            $view_data .= "<?php\n/*\nGenerated at: " . date('Y-m-d H:i:s') .  "\nFile Hash: " . hash('sha256',$view_data . microtime(true)) . "\n*/\n?>";
+            $view_data .= "<?php\n/*\nGenerated at: " . date('Y-m-d H:i:s') .  "\nFile Hash: " . hash('sha256',$view_data . microtime(true)) . "\nRender Time: " . microtime(true) - $genTime . "s\n*/\n?>";
     
             file_put_contents($cached_file,$view_data);
         }

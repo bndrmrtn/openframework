@@ -12,6 +12,14 @@
 
 response()->get(function() {
     /**
+     * To validate a csrf token:
+     * use Framework\App\Security\Csrf; // use the class
+     * Csrf::is_valid() // returns a boolean
+     * Csrf::autoExit() // returns a 400 Bad Request error page
+     * Note: it will always return false if the csrf tokens not enabled in the .env.php file
+     */
+
+    /**
      * The navbar config
      */
     if(_env('USE_AUTH')){
