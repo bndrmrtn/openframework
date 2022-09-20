@@ -11,6 +11,9 @@ use Framework\Base\Base;
 
 class Session extends Base {
 
+    private static array $oneReqDatas = [];
+    private static string $ordkey = 'only-request-data-storage';
+
     public static function boot() {
         $url_array = parse_url(BASE_URL);
         $url = $url_array['host'];
@@ -22,6 +25,7 @@ class Session extends Base {
             session_id(self::getId());
             session_start();
         }
+        self::checkoneReqDs();
     }
 
     public static function getId():string {
@@ -35,11 +39,28 @@ class Session extends Base {
 
     public static function destroy():void {
         $_SESSION = [];
+        self::$oneReqDatas = [];
         session_destroy(self::getId());
     }
 
     public static function all(){
-        return $_SESSION;
+        return array_merge($_SESSION, self::$oneReqDatas);
+    }
+
+    public static function oneReqData($key, $val){
+        if(!isset($_SESSION[self::$ordkey])){
+            $_SESSION[self::$ordkey] = [];
+        }
+        $_SESSION[self::$ordkey][$key] = $val;
+    }
+
+    private static function checkoneReqDs(){
+        if(isset($_SESSION[self::$ordkey])){
+            foreach($_SESSION[self::$ordkey] as $key => $val){
+                self::$oneReqDatas[$key] = $val;
+            }
+            unset($_SESSION[self::$ordkey]);
+        }
     }
 
 }

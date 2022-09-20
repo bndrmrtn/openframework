@@ -15,3 +15,7 @@ Route::get('/dashboard')->auth(Auth::class)->name('dash')->control(function(){
 
 // a route with params
 Route::get('/user/{name}')->auth(Auth::class)->name('user')->control('user');
+
+// a put request                            remember to remove the name param 
+                                            // because it's a new route
+Route::put('/user/{name}')->auth(Auth::class)/*->name('user')*/->control('user');

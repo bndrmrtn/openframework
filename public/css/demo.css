@@ -17,6 +17,13 @@ body {
     z-index: 2;
     text-align: center;
 }
+
+@media all and (max-width:40em){
+    .ftext {
+        width: 100%;
+    }
+}
+
 a {
     color:gray;
     text-decoration: none;

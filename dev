@@ -20,7 +20,7 @@ $app->initialize(
     [ 'env' ],
 
     /* load helpers from the framework */
-    [ 'deletedir', 'dirmaker', 'load_dir_files' ]
+    [ 'deletedir', 'dirmaker', 'load_dir_files', 'tocamelcase' ]
 );
 
 $_config = [

@@ -10,15 +10,9 @@
  * Easier than it looks like ;)
  */
 
-response()->get(function() {
-    /**
-     * To validate a csrf token:
-     * use Framework\App\Security\Csrf; // use the class
-     * Csrf::is_valid() // returns a boolean
-     * Csrf::autoExit() // returns a 400 Bad Request error page
-     * Note: it will always return false if the csrf tokens not enabled in the .env.php file
-     */
+use Framework\App\Security\Csrf;
 
+response()->get(function() {
     /**
      * The navbar config
      */
@@ -57,6 +51,6 @@ response()->get(function() {
          * Then use the variable in the view like: Id: {{ $id }}
          */
         'title' => 'OpenFramework',
-        'description' => 'A slim php framework by <a href="https://mrtn.vip">Martin Binder</a>,<br><a href="https://open.mrtn.vip/docs/#welcome">Documentation</a>.',
+        'description' => 'A slim php tool by <a href="https://mrtn.vip">Martin Binder</a>,<br><a href="https://open.mrtn.vip/docs/#welcome">Documentation</a>.',
     ]);
 });

@@ -19,7 +19,7 @@
                                             Get the username by the user instance
                                             returned by the user() function
                                         }}
-        <p>Welcome! You're logged in as {{ ucfirst(user()->username) }}</p>
+        <p>Welcome! You're logged in as {{ ucfirst(user()->username) }}.</p>
     </div>
     @if(_env('APP_DEV')):
     <div class="bottom">Render time: {{ getrtime() }}s</div>

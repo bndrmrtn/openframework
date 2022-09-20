@@ -2,11 +2,7 @@
 <html lang="en">
     {{ view('assets/head') }}
 <body>
-    {{
-        view('assets/nav',[
-            'links' => $links
-        ])  
-    }}
+    {{ view('assets/nav',[ 'links' => $links ]) }}
 
     <div class="ftext">
         <h1 style="font-size: 40px;">{{ $title }}</h1>

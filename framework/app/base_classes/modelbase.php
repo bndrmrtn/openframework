@@ -14,6 +14,11 @@ abstract class ModelBase extends Base {
     protected static string $_table;
     public bool $exists = false;
 
+    public function __construct($search = NULL, $findBy = 'id', $fail = false){
+        if(is_null($search)) return $this;
+        return $this->find($search,$findBy, $fail);
+    }
+
     public function update(){
         $userId = $this->all_field['id'];
         if(!$userId) return false;
@@ -73,8 +78,7 @@ abstract class ModelBase extends Base {
         foreach($fields as $field){
             if(isset($data[$field])) $created[$field] = $data[$field];
         }
-
-        if(!isset($fields['fields']['date'])) $created['date'] = Dates::now(true);
+        if(isset(self::$_config['fields']['date']) && !isset($fields['date'])) $created['date'] = Dates::now(true);
 
         $i = DB::insert(static::$_table,$created);
         if(!isset($i['errors'])) return true;

@@ -1,25 +1,13 @@
 <?php
 
-/**
- * OpenFramework Database Model
- * Easy to use
- * Example:
- * $model = new TestModel(search: 1, findBy: 'id', fail: false)
- * $model->fields // returns all the readable fields from the model
- * $model->id|field|... // returns a specific field
- * Note: don't use a database field with '-' in it
- * Good: $model->userId,
- * Bad: $model->user-id
- */
-
 namespace Framework\Models;
 
 use Framework\Base\ModelBase;
 
-class Test/*Model*/ extends ModelBase {
+class {ModelName} extends ModelBase {
 
     // database table name
-    protected static string $_table = 'Please Fill Me :)';
+    protected static string $_table = '{ModelTable}';
 
     // all database fields
     // this will auto filled
