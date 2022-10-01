@@ -96,11 +96,12 @@ h3 {
     cursor: pointer
 }
 .login-box a {
-    color: #262626;
+    color: #f2f2f2;
     font-size: 14px;
     text-decoration: none;
     text-align: center;
     display: block;
+    transition: .3s;
 }
 a:hover {
     color: #00ffff;

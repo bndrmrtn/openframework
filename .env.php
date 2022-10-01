@@ -25,16 +25,16 @@ _makeenv([
 'CSRF' => false,
 
 // Authentication
-'USE_AUTH' => true, // false by default
+'USE_AUTH' => false, // false by default
 'AUTH_SESSION_SWITCH' => false, // use the auth with header Authorization
 // without sessions, use this mode for api-s or smth
 
 // SESSIONS
-'USE_SESSION' => true,
+'USE_SESSION' => false,
 //'SESSION_NAME' => 'my-session', // configure the session name
 
 // Database
-'USE_DB' => true,
+'USE_DB' => false,
 'DB_HOST' => '127.0.0.1',
 'DB_PORT' => 3306,
 'DB_USER' => '',

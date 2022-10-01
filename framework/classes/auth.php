@@ -5,30 +5,33 @@ namespace Framework\App\Auth;
 use Framework\App\Error;
 use DB;
 use Framework\App\Accounts\User;
+use Framework\App\Helpers\Dates;
 use Framework\App\Validation;
 use Framework\Base\Base;
+use Framework\App\Mails\Mail;
 
 class Auth extends Base {
 
-    private static $token = NULL;
-    protected static $config = [];
-    private static $usable = false;
-    private static $loggedin = false;
-    private static $user = [];
-    private static $user_session = [];
-    private static $skey = 'auth-token';
-    private static $autologin = true;
-    private static $salt;
-    private static $has_errors = false;
-    private static $errors = [];
-    private static $auth_error = NULL;
-    private static $use_sessions = true;
+    private static ?string $token = NULL;
+    protected static array $config = [];
+    private static bool $usable = false;
+    private static bool $loggedin = false;
+    private static array $user = [];
+    private static array $user_session = [];
+    private static ?string $skey = 'auth-token';
+    private static bool $autologin = true;
+    private static array $salt;
+    private static bool $has_errors = false;
+    private static array $errors = [];
+    private static ?string $auth_error = NULL;
+    private static bool $use_sessions = true;
+    private static bool $verify_email;
     
     public static function boot(){
         if(_env('USE_AUTH')){
-            $config = require ROOT . '/app/config/auth.php';
+            $config = require config('auth');
             self::$salt = $config['salt'];
-            unset($config['salt']);
+            self::$verify_email = $config['email-verification'];
             if(!_env('USE_SESSION', false)){
                 if(_env('AUTH_SESSION_SWITCH',false)){
                     self::sessionSwitch(false);
@@ -45,6 +48,10 @@ class Auth extends Base {
         }
     }
 
+    /**
+     * @param bool enable Use with or without session token save
+     *  @return void
+     */
     public static function sessionSwitch(bool $enable){
         self::$use_sessions = $enable;
     }
@@ -87,6 +94,12 @@ class Auth extends Base {
         $select = DB::select('*',$table,$login,NULL,'0',1);
         if(!isset($select['error'])){
             unset($select[self::$config['validation']['password']['col']]);
+            if(self::$verify_email){
+                if(is_null($select['email_verified_at'])){
+                    self::$auth_error = 'email-verification';
+                    return;
+                }
+            }
             self::$user = $select;
             self::$loggedin = true;
             if($token = Login::save()){
@@ -184,7 +197,9 @@ class Auth extends Base {
             self::$token = $login['token'];
             self::$user_session = $login;
             if(User::$data_login){
-                self::$loggedin = true;
+                if(!self::$verify_email || !is_null(User::$data_login->email_verified_at)){
+                    self::$loggedin = true;
+                }
             }
         } else if(static::$use_sessions){
             unset($_SESSION[self::$skey]);
@@ -233,10 +248,9 @@ class Auth extends Base {
                     return false;
                 }
                 $data = self::useHash($passwordValidation['col'],$data);
-                if(!($reg = $register($data))) $reg = false;
-                if(!$reg['error']){
-                    return true;
-                }
+                if(!($reg = $register($data))) return false;
+                if(!isset($reg['error'])) return true;
+
                 self::$auth_error = $reg['error'];
                 return;
             }
@@ -248,8 +262,15 @@ class Auth extends Base {
         }
     }
 
-    public static function saveRegister($data){
-        return self::safeLogin($data);
+    public static function saveRegister($data, callable $then){
+        if(!self::$verify_email){
+            self::safeLogin($data);
+            if(is_callable($then)) $then($data);
+            return true;
+        } else {
+            self::sendVerifyMail($data);
+            return false;
+        }
     }
 
     public static function notExists(array $data, array $values){
@@ -276,6 +297,49 @@ class Auth extends Base {
             return self::$errors;
         }
         return false;
+    }
+
+    private static function sendVerifyMail($data){
+        if(isset($data['email'])){
+            $conf = self::$config['email-messages'];
+            $mail = new Mail($data['email']);
+            $subject = $conf['subject'];
+            $body = $conf['body']['content'];
+            $is_html = $conf['body']['html'];
+
+            $token = self::makeMailToken();
+            
+            $verify_link = route('auth.verify',$token);
+            foreach(array_merge($data, [ 'verificationUrl' => $verify_link ]) as $k => $v){
+                $subject = str_replace(':' . $k, $v, $subject);
+                $body = str_replace(':' . $k, $v, $body);
+            }
+            $mail->subject($subject);
+            $mail->body($body, $is_html);
+
+            $userId = new User($data['username']);
+            $userId = $userId->id;
+            
+            if($sent = $mail->send()){
+                DB::insert('email_verifications',[
+                    'userid' => $userId,
+                    'token' => $token,
+                    'date' => Dates::now(true),
+                ]);
+            }
+        } else {
+            throw new \Exception('The "email" field is required for logins with email verification.');
+        }
+        self::$auth_error = self::$config['error_msgs']['email-register'];
+        return [ 'error' => self::$auth_error ];
+    }
+
+    private static function makeMailToken(){
+        $table = 'email-verifications';
+        do {
+            $token = randomString(50);
+        } while(DB::exists($table,['token' => $token]));
+        return $token;
     }
 
 }

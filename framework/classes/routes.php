@@ -2,8 +2,6 @@
 
 namespace Routing;
 
-use Framework\App\Auth\Auth;
-
 class Route {
 
     // route data
@@ -241,6 +239,10 @@ class Route {
 
     public static function getName(){
         return toCamelCase(self::$route_name,true);
+    }
+
+    public static function devGetRoutes(){
+        return self::$routes;
     }
 
 }

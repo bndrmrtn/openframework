@@ -22,6 +22,8 @@ if(_env('USE_AUTH')){
         location(route('auth.login'));
     });
 
+    Route::get('/register/token/{token}')->name('auth.verify')->control('auth/verify');
+
 }
 
 /**

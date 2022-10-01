@@ -15,6 +15,21 @@
 // the table used for users
 $config['table'] = 'users';
 
+// verify the emails 
+$config['email-verification'] = false;
+
+// if the email verification is on
+// configure the auth email
+$config['email-messages'] = [
+    // you could use :field to add data from the user's input
+    'subject' => _env('NAME') . ' Email verification',
+    'body' => [
+                    // like :username         // or the verification url by the :verificationUrl field
+        'content' => 'Hello :username! <a href=":verificationUrl">Click here to verify your email!</a>',
+        'html' => true,
+    ],
+];
+
 // auth validation columns
 $config['validation'] = [
     'user' => [ 'col' => 'username', 'validation' => [ 'regex:username' ] ],
@@ -32,6 +47,8 @@ $config[ 'validation_errors' ] = [
 $config[ 'error_msgs' ] = [
     'invalid-logins' => 'Invalid username or password',
     'unknow' => 'Something went wrong',
+    'email-verification' => 'Please verify your email before login',
+    'email-register' => 'We\'ve emailed you a verification link. Please verify it before login.',
 ];
 
 $config['salt'] = [

@@ -32,9 +32,10 @@ response()->get(function(){
         // if the insert is successful
         if($i = User::create($data)){
             // save the authenticated user to the db and to the session
-            Auth::saveRegister($data);
-            // replace the location to the home page
-            location(BASE_URL);
+            return Auth::saveRegister($data, function(){
+                // replace the location to the home page
+                location(BASE_URL);
+            });
         };
         return $i;
     },[

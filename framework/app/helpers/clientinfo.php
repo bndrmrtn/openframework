@@ -4,9 +4,11 @@ function ip(){
     return $_SERVER['REMOTE_ADDR'];
 }
 
-function getOS() { 
+function getOS($custom_useragent = NULL) { 
 
     $os_platform = 'Unknown OS Platform';
+
+    $agent = $custom_useragent ?: $_SERVER['HTTP_USER_AGENT'];
 
     $os_array = array(
             '/windows nt 11/i'      =>  'Windows 11',
@@ -36,7 +38,7 @@ function getOS() {
     );
 
     foreach ($os_array as $regex => $value){
-        if (preg_match($regex, $_SERVER['HTTP_USER_AGENT'])){
+        if (preg_match($regex, $agent)){
             $os_platform = $value;
         }
     }
@@ -44,9 +46,11 @@ function getOS() {
     return $os_platform;
 }
 
-function getBrowser() {
+function getBrowser($custom_useragent = NULL) {
 
     $browser = 'Unknown Browser';
+
+    $agent = $custom_useragent ?: $_SERVER['HTTP_USER_AGENT'];
 
     $browser_array = array(
         '/msie/i'      => 'Internet Explorer',
@@ -62,7 +66,7 @@ function getBrowser() {
     );
 
     foreach ($browser_array as $regex => $value){
-        if (preg_match($regex, $_SERVER['HTTP_USER_AGENT'])){
+        if (preg_match($regex, $agent)){
             $browser = $value;
         }   
     }

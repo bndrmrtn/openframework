@@ -248,6 +248,19 @@ class DB {
             self::log_query($sql);
             return $data;
         } catch(Exception $e){
+            dd($e);
+            display_error($e);
+        }
+    }
+
+    public static function query($sql){
+        if(!self::$connected) return array("error"=>"DB not connected");
+        $exec = self::$PDO->query($sql);
+        try {
+            $data = $exec->fetchAll(PDO::FETCH_COLUMN);;
+            self::log_query($sql);
+            return $data;
+        } catch(Exception $e){
             display_error($e);
         }
     }

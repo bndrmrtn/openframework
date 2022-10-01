@@ -39,3 +39,7 @@ function redirect($to = '/'){
 function asset($asset){
     return url($asset);
 }
+
+function cache($path){
+    return FRAMEWORK . '/cache' . startStrSlash($path);
+}

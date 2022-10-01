@@ -5,6 +5,7 @@ return array(
         'username',
         'email',
         'uniqid',
+        'email_verified_at',
         'password',
         'date'
     ),
@@ -13,6 +14,7 @@ return array(
         'username',
         'email',
         'uniqid',
+        'email_verified_at',
         'date',
     ),
     /**

@@ -10,6 +10,7 @@ class Database extends ClassROOT {
     private static $setup_dir = FRAMEWORK . '/database/db_setup_scripts/';
 
     public static function action($args){
+        if(!DB::connected()) _e('The database is not connected',true);
         $args = self::mkprops($args,true);
         self::$args = $args;
         if(isset($args['setup'])){
@@ -27,7 +28,16 @@ class Database extends ClassROOT {
                 call_user_func(array(Database::class,$method),$args['name']);
                 return;
             } else {
-                _e('Unknow setup command :/',true);
+                _e('Unknow create command :/',true);
+            }
+        }
+        if(isset($args['delete'])){
+            $method = 'delete' . ucfirst($args['delete']);
+            if(method_exists(Database::class,$method)){
+                call_user_func(array(Database::class,$method));
+                return;
+            } else {
+                _e('Unknow delete command :/',true);
             }
         }
         _e('Unknow command :/',true);
@@ -36,7 +46,6 @@ class Database extends ClassROOT {
     private static function setupTables(){
         _e( 'Setting up database tables' . "\n" );
         $setup_dir = self::$setup_dir;
-        if(!DB::connected()) _e('The database is not connected',true);
         $dirs = scanDirectory($setup_dir);
         foreach($dirs as $dir){
             if(str_ends_with($dir,'.php')){
@@ -49,7 +58,6 @@ class Database extends ClassROOT {
     private static function createTable($name){
         _e( 'Creating table setup file' . "\n" );
         $setup_dir = self::$setup_dir;
-        if(!DB::connected()) _e('The database is not connected',true);
         $files = scanDirectory($setup_dir);
         $fnum = 0;
         if(!empty($files)){
@@ -75,6 +83,28 @@ class Database extends ClassROOT {
 
 
         _e( 'Table successfully created at setup_scripts' );
+    }
+
+    private static function show_tables(){
+        return DB::query('SHOW TABLES');
+    }
+
+    public static function deleteTables(){
+        $tables = self::show_tables();
+        
+        if(choice('Are you sure you want to delete ', count($tables) . ' tables and all of it\'s data?')){
+            $del = '';
+            foreach($tables as $table){
+                $del .= "DROP TABLE {$table};";
+            }
+            if($exec = DB::exec($del)){
+                _e(count($tables) . ' Tables successfully deleted.');
+            } else {
+                _e('Something went wrong.');
+            }
+        } else {
+            _e('Exiting...');
+        }
     }
 
 }
