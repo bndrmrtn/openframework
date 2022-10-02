@@ -23,13 +23,16 @@ function json($data = [],?int $code = 200){
     if(!is_null($code)) Header::statuscode($code);
     Header::json();
     if(_env('APP_DEV')){
-        $data['__dev'] = [
-            'render_time' => getrtime(),
-        ];
+        push_appd($data, [
+            '__dev' => [
+                'render_time' => getrtime(),
+            ],
+        ]);
     }
-    $data['data.' . str_replace(' ','_', strtolower(_env('NAME')))] = [
+    push_appd($data,[
         'csrf-token' => \Framework\App\Security\Csrf::token(),
-    ];
+    ]);
+
     echo json_encode($data);
     exit;
 }

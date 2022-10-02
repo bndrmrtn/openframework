@@ -22,7 +22,10 @@ _makeenv([
 'USE_VIEWS' => true, // true by default
 
 // CSRF Tokens
-'CSRF' => false,
+'USE_CSRF' => false,
+
+// Use NAME as data.{NAME} instead of data.app in json responses
+'USE_DATA.NAME' => false,
 
 // Authentication
 'USE_AUTH' => false, // false by default
