@@ -11,9 +11,16 @@
 
 $_V = array(
     '@' => '1',
-    '.' => '2',
+    '.' => '5',
     'PHP_MIN_REQUIRED' => '8.1.0',
 );
+
+/**
+ * @version 1.5
+ * In that version the main change are that
+ * the models are updated and upgraded with a fast cache system
+ * Thereby reducing the numbers of db queries.
+ */
 
 if(version_compare(PHP_VERSION, $_V['PHP_MIN_REQUIRED'], '<=')){
     echo '<div>';

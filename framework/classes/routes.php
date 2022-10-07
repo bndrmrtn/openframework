@@ -189,7 +189,7 @@ class Route {
     }
 
     public static function load(){
-        loadDirFiles(ROOT . '/app/routes/');
+        loadDirFiles(ROOT . '/routes/');
     }
 
     private static function routeByKey($key,$exception = false){

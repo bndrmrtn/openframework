@@ -7,7 +7,7 @@ use \DB;
 class Database extends ClassROOT {
 
     private static $args = [];
-    private static $setup_dir = FRAMEWORK . '/database/db_setup_scripts/';
+    private static $setup_dir = ROOT . '/app/tables/';
 
     public static function action($args){
         if(!DB::connected()) _e('The database is not connected',true);
@@ -25,7 +25,9 @@ class Database extends ClassROOT {
         if(isset($args['create']) && isset($args['name'])){
             $method = 'create' . ucfirst($args['create']);
             if(method_exists(Database::class,$method)){
-                call_user_func(array(Database::class,$method),$args['name']);
+                $m = false;
+                if(isset($args['with']) && $args['with'] == 'model') $m = true;
+                call_user_func(array(Database::class,$method),$args['name'], $m);
                 return;
             } else {
                 _e('Unknow create command :/',true);
@@ -55,7 +57,7 @@ class Database extends ClassROOT {
         _e( 'DB setup files successfully executed' );
     }
 
-    private static function createTable($name){
+    private static function createTable($name, $model = false){
         _e( 'Creating table setup file' . "\n" );
         $setup_dir = self::$setup_dir;
         $files = scanDirectory($setup_dir);
@@ -83,6 +85,12 @@ class Database extends ClassROOT {
 
 
         _e( 'Table successfully created at setup_scripts' );
+        if($model){
+            Model::main([
+                'name:' . $name,
+                'table:' . $name,
+            ]);
+        }
     }
 
     private static function show_tables(){
@@ -97,7 +105,12 @@ class Database extends ClassROOT {
             foreach($tables as $table){
                 $del .= "DROP TABLE {$table};";
             }
-            if($exec = DB::exec($del)){
+
+            DB::exec('SET foreign_key_checks = 0;');
+            $exec = DB::exec($del);
+            DB::exec('SET foreign_key_checks = 1;');
+
+            if($exec){
                 _e(count($tables) . ' Tables successfully deleted.');
             } else {
                 _e('Something went wrong.');

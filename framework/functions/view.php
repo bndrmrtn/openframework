@@ -1,7 +1,5 @@
 <?php
 
-use Routing\Route;
-
 function view($file,$data = [],?int $code = 200){
     if(!is_null($code)) Header::statuscode($code);
     if(Framework\App\Request::wantsJson() || !_env('USE_VIEWS',true)){
@@ -30,6 +28,7 @@ function json($data = [],?int $code = 200){
         ]);
     }
     push_appd($data,[
+        'session' => \Framework\App\Session::getId(),
         'csrf-token' => \Framework\App\Security\Csrf::token(),
     ]);
 

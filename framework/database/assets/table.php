@@ -37,6 +37,13 @@ class DB_TABLE extends SQL {
         return $this->col($name,'int',1,false,false,$default);
     }
 
+    public function createdAt(){
+        if(!in_array('date', array_keys($this->vals))){
+            return $this->col('date', 'datetime');
+        }
+        throw new Exception('Date already added to this table');
+    }
+
     public function setPrimaryKey($name){
         if(isset($this->vals['columns'][$name])){
             $this->vals['columns'][$name]['primary'] = true;

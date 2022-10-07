@@ -22,7 +22,7 @@ $table->col('email_verified_at','datetime',NULL,true);
 $table->col('password','text');
 
 // profile creation date
-$table->col('date','datetime');
+$table->createdAt();
 
 // set primary key to id
 $table->setPrimaryKey('id');
