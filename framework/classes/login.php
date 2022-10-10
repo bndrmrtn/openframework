@@ -16,7 +16,7 @@ class Login extends Auth {
         $uniqueId = self::uniqueId();
         $date = Dates::toString(Dates::addTo(['day' => 5],Dates::now()));
         $i = DB::insert(self::$table_name,[
-            'user' => self::user('user'),
+            'user_id' => self::user('id'),
             'token' => $uniqueId,
             'useragent' => $_SERVER["HTTP_USER_AGENT"],
             'date' => $date,
@@ -37,7 +37,7 @@ class Login extends Auth {
         $table = self::$table_name;
         $select = DB::_select("SELECT * FROM $table WHERE token = ? AND date > ? LIMIT 1",[$token,date('Y-m-d H:i:s')],[0]);
         if(isset($select['error'])) return false;
-        User::login_user($select['user']);
+        User::login_user($select['user_id'], 'id');
         return $select;
     }
 

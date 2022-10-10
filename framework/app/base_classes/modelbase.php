@@ -6,7 +6,6 @@ use DB;
 use Framework\App\Error;
 use Framework\App\Helpers\Dates;
 
-
 abstract class ModelBase extends Base {
 
     /** @var array $__cache All the queryd data will stored there so it accessable without a new db query */
@@ -23,6 +22,8 @@ abstract class ModelBase extends Base {
 
     /** @var bool $exists Returns that the current row exists in the database or not */
     public bool $exists = false;
+
+    protected $__select = [];
 
     /**
      * @param string|int|null $search The field data to search, like: id: 5, or name: Test
@@ -77,13 +78,17 @@ abstract class ModelBase extends Base {
      */
     public function find(string|int $id, string $field = 'id', bool $fail = false):self {
         $fromc = true;
-        $select = self::cache_get([ $field => $id ]);
+        $select = static::cache_get([ $field => $id ]);
+        dump($select,false, static::class);
         if(!$select){
             $fromc = false;
+            DB::logger();
             $select = DB::_select('SELECT * FROM ' . static::$_table . ' WHERE ' . $field . ' = ?',[$id],[0]);
+            dump(DB::get_querys());
         }
         if(!isset($select['error'])){
-            if($fromc) self::cache_store($select);
+            if(!$fromc) static::cache_store($select);
+            dump(static::cache_get($select),false, static::class . ' cache');
             $this->all_field = $select;
             foreach($select as $field_name => $value){
                 if(in_array($field_name, static::$_config['readable'])){
@@ -146,11 +151,13 @@ abstract class ModelBase extends Base {
     }
 
     private static function cache_get($search, $wk = false){
-        if(empty(self::$__cache)) return false;
+        if(!isset(self::$__cache[static::class])) return false;
+        $_cvars = self::$__cache[static::class];
+
         $ckey = false;
         $found = false;
         $statuses = [];
-        foreach(self::$__cache as $key => $cache){
+        foreach($_cvars as $key => $cache){
             if(!$found){
                 foreach($search as $field => $value){
                     if($cache[$field] == $value){
@@ -169,16 +176,16 @@ abstract class ModelBase extends Base {
             }
             $statuses = [];
         }
-        if($ckey !== false && isset(self::$__cache[$ckey])){
-            if(!$wk) return self::$__cache[$ckey];
-            return [ 'key' => $ckey, 'obj' => self::$__cache[$ckey] ];
+        if($ckey !== false && isset($_cvars[$ckey])){
+            if(!$wk) return $_cvars[$ckey];
+            return [ 'key' => $ckey, 'obj' => $_cvars[$ckey] ];
         }
 
         return false;
     }
 
     private static function cache_store($all_field){
-        self::$__cache[] = $all_field;
+        self::$__cache[static::class][] = $all_field;
     }
 
     /**
@@ -210,6 +217,243 @@ abstract class ModelBase extends Base {
         $fields = DB::query('DESCRIBE ' . static::$_table);
         if(!isset($fields['error'])) return $fields;
         return NULL;
+    }
+
+    /**
+     * @param ?array $where Specify the required fields to select (default=*)
+     * @param int $limit Specify the select limit (default=unset[NULL])
+     * @param int $offset Specify the select offset (default=unset[NULL])
+     * @return ?array All the record from the database
+     */
+    public static function all(?array $where = NULL, int $limit = NULL, int $offset = NULL):?array {
+        $data = DB::select('*', static::$_table, $where, 'id DESC', '0', $limit, $offset);
+        if(!$data['errors']) return $data;
+        return NULL;
+    }
+
+    /**
+     * @param string|array $fields Specify the required fields to select (default=*)
+     * @return self
+     */
+    public static function select(string|array $fields = '*') {
+        $self = new static;
+        $pushfield = '';
+
+        if(is_array($fields)){
+            foreach($fields as $key => $field) {
+                $pushfield .= $field;
+                if(array_key_last($fields) != $key) $pushfield .= ', ';
+            }
+        } else {
+            $pushfield = $fields;
+        }
+
+        $self->__select['fields'] = $pushfield;
+        return $self;
+    }
+
+    /**
+     * @param array $where And statement, like: [ 'id' => [1,2,3], 'name' => 'test' ]
+     * @return self
+     */
+    public function where(array $where = []) {
+        $this->__select['where'] = $where;
+        return $this;
+    }
+
+    /**
+     * @param array $or Or statement, like: [ 'id' => [1,2,3], 'name' => 'test' ]
+     * @return self
+     */
+    public function or(array $or = []) {
+        $this->__select['or'] = $or;
+        return $this;
+    }
+
+    /**
+     * @param int $offset Sets the select offset (default=1)
+     * @return self
+     */
+    public function offset(int $offset = 1) {
+        $this->__select['offset'] = $offset;
+        return $this;
+    }
+
+    /**
+     * @param int $limit Sets the select limit (default=1)
+     * @return self
+     */
+    public function limit(int $limit = 1) {
+        $this->__select['limit'] = $limit;
+        return $this;
+    }
+
+    /**
+     * @param string $by Sets the select to desc by this field (default=id)
+     * @return self
+     */
+    public function desc(string $by = 'id') {
+        $this->__select['orderby'] = $by . ' DESC';
+        return $this;
+    }
+
+    /**
+     * @param string $by Sets the select to asc by this field (default=id)
+     * @return self
+     */
+    public function asc(string $by = 'id') {
+        $this->__select['orderby'] = $by . ' ASC';
+        return $this;
+    }
+
+    //TODO with multiple models
+    public function with(self $model, string $self_col, string $foreign_col = 'id') {
+        $this->__select['with'] = $model::$_table;
+        $this->__select['withModel'] = $model;
+        $this->__select['with_config'] = [ $self_col, $foreign_col ];
+        return $this;
+    }
+
+    // FIXME currently not working
+    public function withWhere(array $where) {
+        $this->__select['withWhere'] = $where;
+        return $this;
+    }
+
+    /**
+     * @return self (returns the first record from the database)
+     */
+    public function first(){
+        $this->__select['limit'] = 1;
+        $this->__select['firstval'] = true;
+        $this->asc();
+        return $this->get();
+    }
+
+    /**
+     * @return self (returns the latest record from the database)
+     */
+    public function latest(){
+        $this->__select['limit'] = 1;
+        $this->__select['firstval'] = true;
+        $this->desc();
+        return $this->get();
+    }
+
+    /**
+     * @return array Execute all the setted select config models
+     */
+    public function get(){
+        $config = $this->__select;
+        $binding = [];
+
+        $select = $config['fields'] ?: '*';
+
+        $firstval = isset($config['firstval']);
+
+        $from = static::$_table;
+
+        $addbfr = '';
+
+        $where_raw = $config['where'] ?: NULL;
+        $or_raw = $config['or'] ?: NULL;
+
+        if($where_raw != NULL || $or_raw != NULL){
+            $addbfr .= ' WHERE ';
+        }
+
+        $where = '';
+        if($where_raw){
+            foreach($where_raw as $field => $data){
+                if(!is_array($data)){
+                    $where .= ' ' . $field . ' = ?';
+                    if($field !== array_key_last($where_raw)) $where .= ' AND';
+                    $binding[] = $data;
+                } else {
+                    foreach($data as $k => $val){
+                        $where .= ' ' . $field . ' = ?';
+                        if($k !== array_key_last($data)) $where .= ' AND';
+                        $binding[] = $val;
+                    }
+                }
+                
+            }
+        }
+        
+        $or = '';
+        if($or_raw){
+            foreach($or_raw as $field => $data){
+                if(!is_array($data)){
+                    $or .= ' ' . $field . ' = ?';
+                    if($field !== array_key_last($or_raw)) $or .= ' AND';
+                    $binding[] = $data;
+                } else {
+                    foreach($data as $k => $val){
+                        $or .= ' ' . $field . ' = ?';
+                        if($k !== array_key_last($data)) $or .= ' OR';
+                        $binding[] = $val;
+                    }
+                }
+                
+            }
+        }
+
+        $query = "SELECT {$select} FROM {$from} {$addbfr} {$where} {$or}";
+        while(str_contains($query ,'  ')) $query = str_replace('  ', ' ', $query);
+        if(str_ends_with($query, ' ')) $query = substr($query, 0, -1);
+
+        if(isset($config['orderby'])){
+            $query .= ' ORDER BY ' . $config['orderby'];
+        }
+
+        if(isset($config['limit'])){
+            $query .= ' LIMIT ' . $config['limit'];
+        }
+
+        //dd($query);
+        $return_key = NULL;
+        if($firstval) $return_key = [0];
+        $data = DB::_select($query, $binding, $return_key);
+        
+        if(isset($data['error'])) return NULL;
+        $models = [];
+        if(!$firstval){
+            foreach($data as $d){
+                static::cache_store($d);
+                $models[] = new static($d['id'], 'id');
+            }
+        } else {
+            static::cache_store($data);
+            $models = new static($data['id']);
+        }
+
+        if(isset($config['with']) && isset($config['with_config'])){
+            $key1 = $config['with_config'][0];
+            $key2 = $config['with_config'][1];
+
+            $ids = array_unique(array_column($data, $key1));
+
+            $relation = $config['withModel'];
+
+            $relation::select('*')->or([$key2 => $ids])->get();
+
+
+            if(!$firstval){
+                foreach($models as $key => $model){
+                    $models[$key]->{$relation::$_table} = new $relation($model->{$key1}, $key2);
+                    $models[$key]->all_fields[$relation::$_table] = $models[$key]->{$relation::$_table};
+                    $models[$key]->fields[$relation::$_table] = $models[$key]->{$relation::$_table};
+                }
+            } else {
+                $models->{$relation::$_table} = new $relation($models->{$key1}, $key2);
+                $models->all_fields[$relation::$_table] = $models->{$relation::$_table};
+                $models->fields[$relation::$_table] = $models->{$relation::$_table};
+            }
+
+        }
+
+        return $models;
+
     }
 
 }

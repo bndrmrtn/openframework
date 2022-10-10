@@ -317,16 +317,16 @@ class Auth extends Base {
             $mail->subject($subject);
             $mail->body($body, $is_html);
 
-            $userId = new User($data['username']);
-            $userId = $userId->id;
-            
-            if($sent = $mail->send()){
-                DB::insert('email_verifications',[
-                    'userid' => $userId,
-                    'token' => $token,
-                    'date' => Dates::now(true),
-                ]);
-            }
+            $user = User::select('*')->where(['username' => $data['username']])->first();
+            $userId = $user->id;
+
+            $inserted = DB::insert('email_verifications',[
+                'user_id' => $userId,
+                'token' => $token,
+                'date' => Dates::now(true),
+            ]);
+            if(isset($inserted['error'])) Error::ServerError('Database Error', 'Unable to save your profile verification token!');
+            if(!$mail->send()) Error::ServerError('Email Error', 'Unable to send your profile verification token!');
         } else {
             throw new \Exception('The "email" field is required for logins with email verification.');
         }

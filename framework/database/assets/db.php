@@ -128,8 +128,8 @@ class DB {
             $sql->bindValue(":$key",$value);
         }
         try {
-            $insert = $sql->execute();
             self::log_query($sql_str, $datas);
+            $insert = $sql->execute();
             return $insert;
         }
         catch(Exception $e){
@@ -212,7 +212,7 @@ class DB {
         }
     }
 
-    public static function _select($sql_data,array $value_array = NULL,array $return_keys = NULL){
+    public static function _select($sql_data,array $value_array = NULL,array $return_keys = NULL, $fetch_modes = []){
         $sql = self::$PDO->prepare($sql_data);
         if($value_array){
             foreach($value_array as $i => $value){
@@ -220,8 +220,8 @@ class DB {
             }
         }
         try {
-            $sql->execute();
             self::log_query($sql_data, $value_array);
+            $sql->execute();
         } catch(Exception $e){
             return array("error"=>$e->getMessage());
         }
@@ -277,14 +277,12 @@ class DB {
 
     private static function log_query($query, $binds = NULL){
         if(self::$logger_on){
-            self::$querys['log-' . microtime(true)] = [
-                'query' => $query,
-                'binded-data' => $binds,
-            ];
+            self::$querys[] = new DB\Log($query, $binds);
         }
     }
 
     public static function logger(bool $on = true){
+        if(!$on) self::$querys = [];
         self::$logger_on = $on;
     }
 

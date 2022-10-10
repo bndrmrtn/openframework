@@ -177,10 +177,10 @@ class Route {
             } else {
                 if(_env('APP_DEV')) throw new \Exception(strtoupper($method) . ' method not supported on this resource');
                 view('errors/index',[
-                    'code' => 500,
-                    'title' => 'Unsupported method',
-                    'message' => strtoupper($method) . ' method not supported on this resource',
-                ],500);
+                    'code' => 405,
+                    'title' => 'Method Not Allowed',
+                    'message' => strtoupper($method) . ' method not allowed at this resource',
+                ],405);
                 exit;
             }
         }

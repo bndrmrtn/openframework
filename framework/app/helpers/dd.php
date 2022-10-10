@@ -4,8 +4,9 @@ function ddInit(){
     if($GLOBALS['dd-init-finished']) return;
     $ddid = randomString(30);
     $GLOBALS['dd-data-id'] = $ddid;
+    echo '<script id="dd--id-' . $ddid . '">document.body.innerHTML = ""</script>';
     echo '<style>
-        body{margin:0;padding:0;background-color:black;}
+        body {margin:0!important;padding:0!important;background-color:black!important;}
         #dd-data-output {
             background:#222;
             color:#fff;
@@ -18,13 +19,24 @@ function ddInit(){
     $GLOBALS['dd-init-finished'] = true;
 }
 
-function dump($v, $html = false){
+function dump($v, $html = false, $msg = ''){
     if($exists = !class_exists('Framework\App\Request') || !\Framework\App\Request::wantsJson() && function_exists('_env') && _env('USE_VIEWS',false)){
         ddInit();
         $dkey = randomString(15);
         ob_start();
         echo '<pre id="dd-data-output" dumpid="' . $dkey . '">';
-        $html ? var_dump(htmlentities($v)) : var_dump($v);
+        if($msg){
+            echo "<b style='background-color:#444;padding:3px;border-radius:3px;'>Dump Message: '{$msg}'</b><br>\n";
+        }
+
+        if($html){
+            echo highlightText(htmlentities(var_export($v, true)));
+        } else {
+            echo highlightText(var_export($v, true));
+        }
+        
+
+        echo '<br><button style="border:none;background-color:#334;cursor:pointer;color:white;padding:7px;margin:5px;border-radius:3px;" onclick="this.parentElement.remove();">Close</button>';
         echo '</pre>';
         $dd = ob_get_contents();
         ob_get_clean();
@@ -36,7 +48,7 @@ function dump($v, $html = false){
     }
 }
 
-function dd($v,$html = false){
-    dump($v, $html);
+function dd($v,$html = false, $msg = ''){
+    dump($v, $html, $msg);
     exit;
 }
