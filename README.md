@@ -3,7 +3,7 @@
 ## Create PHP Apps in a faster way
 
 With openframework, you can build your applications and apps faster than you think.
-Works with built-in user management that you can turn off and on, as well as authentic email verifications. Create routes quickly, set user authentication needs, etc.
+Works with built-in user management that you can turn on and off, as well as authentic email verifications. Create routes quickly, set user authentication needs, etc.
 
 ## dev PHP File
 
