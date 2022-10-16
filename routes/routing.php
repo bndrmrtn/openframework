@@ -2,10 +2,12 @@
 // use the routing
 
 use Framework\App\Auth\Auth;
+use Framework\Controllers\MainController;
+use Framework\Controllers\UserController;
 use Routing\Route;
 
 // simple route for the index page, with an index controller
-Route::get('/')->name('index')->control('index');
+Route::get('/')->name('index')->control([MainController::class, 'index']);
 
 // a simple route with authorization required
 Route::get('/dashboard')->auth(Auth::class)->name('dash')->control(function(){
@@ -14,8 +16,8 @@ Route::get('/dashboard')->auth(Auth::class)->name('dash')->control(function(){
 });
 
 // a route with params
-Route::get('/user/{name}')->auth(Auth::class)->name('user')->control('user');
+Route::get('/user/{name}')->auth(Auth::class)->name('user')->control([UserController::class, 'index']);
 
 // a put request                            remember to remove the name param 
                                             // because it's a new route
-Route::put('/user/{name}')->auth(Auth::class)/*->name('user')*/->control('user');
+Route::put('/user/{name}')->auth(Auth::class)/*->name('user')*/->control([UserController::class, 'update']);
