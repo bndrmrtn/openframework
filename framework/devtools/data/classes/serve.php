@@ -32,7 +32,7 @@ class Serve extends ClassROOT {
             'port' => static::$config['port'],
         ];
         file_put_contents(self::$hoststore,'<?php return ' . var_export($host_data, true) . '; ?>');
-        shell_exec('php -S ' . $host . ' -t ' . ROOT . '/public/');
+        shell_exec('php -S ' . $host . ' -t ' . ROOT . '/public/' . ' ' . FRAMEWORK . '/server.php');
     }
 
     public static function customPort($data){

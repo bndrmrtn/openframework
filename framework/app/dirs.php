@@ -7,5 +7,4 @@ return array(
     '/functions/',
     '/classes/',
     '/http/',
-    '/../app/models/'
 );

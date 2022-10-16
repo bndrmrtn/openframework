@@ -12,6 +12,7 @@ $cmds = array(
         'cache' => [ \DEV\Cache::class, 'modify' ],
         'production' => [ \DEV\Production::class, 'mode' ],
         'model' => [ \DEV\Model::class, 'main' ],
+        'controller' => [ \DEV\Controller::class, 'main' ],
     ),
 );
 

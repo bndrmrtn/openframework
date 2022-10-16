@@ -79,16 +79,13 @@ abstract class ModelBase extends Base {
     public function find(string|int $id, string $field = 'id', bool $fail = false):self {
         $fromc = true;
         $select = static::cache_get([ $field => $id ]);
-        dump($select,false, static::class);
         if(!$select){
             $fromc = false;
             DB::logger();
             $select = DB::_select('SELECT * FROM ' . static::$_table . ' WHERE ' . $field . ' = ?',[$id],[0]);
-            dump(DB::get_querys());
         }
         if(!isset($select['error'])){
             if(!$fromc) static::cache_store($select);
-            dump(static::cache_get($select),false, static::class . ' cache');
             $this->all_field = $select;
             foreach($select as $field_name => $value){
                 if(in_array($field_name, static::$_config['readable'])){
@@ -410,7 +407,6 @@ abstract class ModelBase extends Base {
             $query .= ' LIMIT ' . $config['limit'];
         }
 
-        //dd($query);
         $return_key = NULL;
         if($firstval) $return_key = [0];
         $data = DB::_select($query, $binding, $return_key);
@@ -424,7 +420,7 @@ abstract class ModelBase extends Base {
             }
         } else {
             static::cache_store($data);
-            $models = new static($data['id']);
+            $models = new static($data['id'], 'id');
         }
 
         if(isset($config['with']) && isset($config['with_config'])){

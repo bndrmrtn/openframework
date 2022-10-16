@@ -32,7 +32,7 @@ $config['email-messages'] = [
 
 // auth validation columns
 $config['validation'] = [
-    'user' => [ 'col' => 'username', 'validation' => [ 'regex:username' ] ],
+    'user' => [ 'col' => 'username', 'validation' => [ 'regex:username', 'min:3', 'max:10' ] ],
     'password' => [ 'col' => 'password',/* 'custom_hash_function' => 'myHash' */ ],
 ];
 

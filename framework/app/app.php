@@ -26,6 +26,10 @@ class Framework {
         // include the database if it's required
         if(_env('USE_DB', false)) require FRAMEWORK . '/database/loader.php';
 
+        // load controller classes
+        self::loadAll(ROOT . '/app/Models');
+        self::loadAll(ROOT . '/app/Controllers');
+
         // boot all the classes that has that functionality
         self::bootClasses();
 
@@ -33,6 +37,17 @@ class Framework {
 
         // return a simple then statement, that runs after that function
         return new THEN();
+    }
+
+    private static function loadAll($dir){
+        if(is_dir($dir)){
+            $files = getDirContents($dir);
+            if(is_array($files)){
+                foreach($files as $file){
+                    if(str_ends_with($file, '.php')) require $file;
+                }
+            }
+        }
     }
 
     private static function bootClasses(){

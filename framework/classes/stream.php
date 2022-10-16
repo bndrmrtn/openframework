@@ -2,6 +2,7 @@
 
 namespace Routing;
 
+use Framework\App\CallController;
 use Framework\App\Error;
 use Header;
 
@@ -23,15 +24,10 @@ class Stream {
         if($auth){
             if(!$stream['call-function']){
                 // call the controller if exists
-                $call = ROOT . '/app/controllers/' . $stream['call'] . '.php';
-                if(file_exists($call)){
-                    require $call;
-                } else {
-                    // else drop a file not found error
-                    self::noFile($call);
-                }
+                $instance = CallController::call(...$stream['call']);
+                response()->handle($instance, $stream['call'][1]);
             } else {
-                response()->{$stream['method']}($stream['call']);
+                response()->handle($stream['call']);
             }
         } else {
             Header::statuscode(401);

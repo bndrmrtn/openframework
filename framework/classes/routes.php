@@ -56,12 +56,12 @@ class Route {
         return $this;
     }
 
-    public function control(string|callable $file){
+    public function control(string|array|callable $file){
         $key = $this->name;
         if(!$this->name) $key = count(static::$routes) + 1;
         static::$used[] = [ $this->method => $this->fullpath, 'key' => $key ];
         $call = false;
-        if(!is_string($file) && is_callable($file)) $call = true;
+        if(!is_array($file) && is_callable($file)) $call = true;
 
         static::$routes[$key] = [
             'key' => $key,
@@ -168,7 +168,10 @@ class Route {
             $fp = $route['fullpath'];
             
             if(array_search($method,self::$route_methods[$fp])){
-                $k = array_search($fp,array_column(self::$routes,'fullpath','key'));
+                $_routes = array_filter(self::$routes, function($x) use($method) {
+                    return $x['method'] === $method;
+                });
+                $k = array_search($fp,array_column($_routes,'fullpath','key'));
                 if($k !== false){
                     $route = self::routeByKey($k);
                     self::$route_name = $route['key'];

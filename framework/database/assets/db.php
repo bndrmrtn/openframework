@@ -261,6 +261,7 @@ class DB {
             self::log_query($sql);
             return $data;
         } catch(Exception $e){
+            return array("error" => $e->getMessage());
             display_error($e);
         }
     }
