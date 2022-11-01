@@ -13,6 +13,7 @@ class Session extends Base {
 
     private static array $oneReqDatas = [];
     private static string $ordkey = 'only-request-data-storage';
+    public static string $id;
 
     public static function boot() {
         $url_array = parse_url(BASE_URL);
@@ -22,14 +23,29 @@ class Session extends Base {
         }
         session_set_cookie_params(0, '/', $url, $url_array['scheme'] == 'https', true);
         if(_env('USE_SESSION')){
-            session_id(self::getId());
+            $id = self::getId();
+            session_id($id);
             session_start();
         }
         self::checkoneReqDs();
     }
 
+    private function headerBearer():string|false {
+        if(isset(headers()['Authorization'])){
+            $auth = headers()['Authorization'];
+            if(str_starts_with($auth, 'Bearer') && str_contains($auth, ' ')){
+                $e = explode(' ', $auth);
+                $token = $e[array_key_last($e)];
+                if(RegEx::is_username($token) && strlen($token) >= 250) return $token;
+            }
+        }
+        return false;
+    }
+
     public static function getId():string {
-        if(isset($_COOKIE[ini_get('session.name')])){
+        if($bearer = self::headerBearer()){
+            $id = $bearer;
+        } else if(isset($_COOKIE[ini_get('session.name')])){
             $id = $_COOKIE[ini_get('session.name')];
         } else {
             $id = randomString(250);
@@ -40,11 +56,18 @@ class Session extends Base {
     public static function destroy():void {
         $_SESSION = [];
         self::$oneReqDatas = [];
-        session_destroy(self::getId());
+        session_destroy(self::$id);
     }
 
     public static function all(){
         return array_merge($_SESSION, self::$oneReqDatas);
+    }
+
+    public static function get($key){
+        if(isset($_SESSION[$key])){
+            return $_SESSION[$key];
+        }
+        return NULL;
     }
 
     public static function oneReqData($key, $val){
