@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Controller;
+
+use Core\Base\Controller;
+
+class {ControllerName}Controller extends Controller {
+
+     /**
+      * The controller's index method
+      */
+     public function index(){
+          // start coding :D
+     }
+
+}

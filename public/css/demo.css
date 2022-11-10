@@ -51,3 +51,24 @@ a:hover {
 .navbar-toggler svg {
     width: 30px;
 }
+
+/**
+ * docs button
+ */
+
+.docs-btn {
+    color:white;
+    width: 100%;
+    background-color: #333;
+    border-radius: 7px;
+    border: 2px solid #333;
+    padding: 8px 20px!important;
+    transition: .3s;
+}
+
+.docs-btn:hover,
+.docs-btn:focus {
+    background-color: #444;
+    transition: .3s;
+    border-color: #444;
+}

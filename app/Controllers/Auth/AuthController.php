@@ -1,13 +1,13 @@
 <?php
 
-namespace Framework\Controllers;
+namespace App\Controller;
 
 use DB;
-use Framework\App\Accounts\User;
-use Framework\App\Auth\Auth;
-use Framework\App\Helpers\Dates;
-use Framework\Base\Controller;
-use Framework\Models\EmailVerifications;
+use Core\Accounts\User;
+use Core\App\Auth;
+use Core\Helpers\Dates;
+use Core\Base\Controller;
+use App\Model\EmailVerifications;
 
 // uncomment if you need this
 //if(Auth::is_loggedin()) location('/');

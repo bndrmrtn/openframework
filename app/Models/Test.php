@@ -12,9 +12,9 @@
  * Bad: $model->user-id
  */
 
-namespace Framework\Models;
+namespace App\Model;
 
-use Framework\Base\ModelBase;
+use Core\Base\ModelBase;
 
 class Test/*Model*/ extends ModelBase {
 

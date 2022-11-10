@@ -4,11 +4,11 @@ error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE ^ E_DEPRECATED);
 
 const ROOT = __DIR__;
 
-const FRAMEWORK = __DIR__ . DIRECTORY_SEPARATOR . 'framework';
+const CORE = __DIR__ . DIRECTORY_SEPARATOR . 'core';
 
-require FRAMEWORK . '/version.php';
+require CORE . '/version.php';
 
-const DEVROOT = __DIR__ . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'devtools';
+const DEVROOT = __DIR__ . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'devtools';
 
 $app = require DEVROOT . '/app.php';
 

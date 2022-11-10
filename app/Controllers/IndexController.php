@@ -1,8 +1,8 @@
 <?php
 
-namespace Framework\Controllers;
+namespace App\Controller;
 
-use Framework\Base\Controller;
+use Core\Base\Controller;
 
 class MainController extends Controller {
 
@@ -25,7 +25,7 @@ class MainController extends Controller {
                 * Then use the variable in the view like: Id: {{ $id }}
                 */
                'title' => 'OpenFramework',
-               'description' => 'A slim php tool by <a href="https://mrtn.vip">Martin Binder</a>,<br><a href="https://open.mrtn.vip/docs/#welcome">Documentation</a>.',
+               'description' => 'A slim php tool by <a href="https://mrtn.vip">Martin Binder</a>,<br><a href="https://open.mrtn.vip/documentation" target="_blank">Documentation</a>',
           ]);
      }
 

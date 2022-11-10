@@ -6,7 +6,7 @@
  *      function myHash( $password ){                                          *
  *          return hash('sha256','somesalt' . $password);                      *
  *      }                                                                      *
- *      NOTE: create this funtion in the /framework/app/helpers/ folder        *
+ *      NOTE: create this funtion in the /core/app/helpers/ folder        *
  *      if you need a custom hash function                                     *
  *                                                                             *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

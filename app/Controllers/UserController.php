@@ -8,16 +8,16 @@
  * the function could be: function($age,$name){ ... }
  * The app returns all the props by it's name
  * Or the request by the $request variable
- * Like: function($name,\Framework\App\Request $request){ ... }
+ * Like: function($name,\Core\App\Request $request){ ... }
  */
 
-namespace Framework\Controllers;
+namespace App\Controller;
 
-use Framework\App\Accounts\User;
-use Framework\App\Request;
-use Framework\App\Session;
-use Framework\App\Validation;
-use Framework\Base\Controller;
+use Core\Accounts\User;
+use Core\App\Request;
+use Core\App\Session;
+use Core\App\Validation;
+use Core\Base\Controller;
 
 class UserController extends Controller {
 

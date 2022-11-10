@@ -13,9 +13,11 @@ return array(
         4 => '--', // use this to comment
     ),
 
+    'view-render-file-ext' => '.v.php', // file extension to render
+
     'replace-tags-to' => array(
         '@else:' => 'else:',
-        '@CSRF' => 'echo \Framework\App\Security\Csrf::tokenInput()'
+        '@CSRF' => 'echo \Core\Security\Csrf::tokenInput()'
     ),
 
 );

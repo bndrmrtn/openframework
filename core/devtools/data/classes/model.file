@@ -4,10 +4,10 @@ namespace App\Model;
 
 use Core\Base\ModelBase;
 
-class EmailVerifications extends ModelBase {
+class {ModelName} extends ModelBase {
 
     // database table name
-    protected static string $_table = 'email_verifications';
+    protected static string $_table = '{ModelTable}';
 
     // all database fields
     // this will auto filled
@@ -16,18 +16,10 @@ class EmailVerifications extends ModelBase {
     // model config
     protected static array $_config = [
         // the fields in the db
-        'fields' => array(
-            // don't add 'id' if you don't have a writable config
-            'user_id',
-            'token',
-            'date',
-        ),
+        'fields' => {ModelRealFields}
         'readable' => array(
             // fields that you want to allow to read
             'id',
-            'user_id',
-            'token',
-            'date',
             // 'password'   password is a sensitive data so it's ignored
         ),
         /**

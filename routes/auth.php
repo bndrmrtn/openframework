@@ -1,7 +1,7 @@
 <?php
 
-use Framework\App\Auth\Auth;
-use Framework\Controllers\AuthController;
+use Core\App\Auth;
+use App\Controller\AuthController;
 use Routing\Route;
 
 // if the authorization is on
