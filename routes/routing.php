@@ -21,7 +21,3 @@ Route::get('/user/{name}')->auth(Auth::class)->name('user')->control([UserContro
 // a put request                            remember to remove the name param 
                                             // because it's a new route
 Route::put('/user/{name}')->auth(Auth::class)/*->name('user')*/->control([UserController::class, 'update']);
-
-Route::get('/test')->name('test.view')->control(function(){
-    return view('test');
-});
