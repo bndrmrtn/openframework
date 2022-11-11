@@ -2,6 +2,7 @@
 
 namespace Core\Framework;
 
+use Core\App\Error;
 use Routing\Route;
 use Routing\Stream;
 use Tools\THEN;
