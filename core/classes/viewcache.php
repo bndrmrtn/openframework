@@ -9,7 +9,7 @@ class View extends Base {
 
     public static $store_dir = CACHE . '/views';
     private static $ez_tags = [ '{{', '}}', '*', '!', '--' ];
-    private static $views_dir = ROOT . '/views';
+    public static $views_dir = ROOT . '/views';
     private static $view__autorender_file = '.view.php';
     private static array $custom_replace = [];
     
@@ -21,10 +21,32 @@ class View extends Base {
         if(isset($config['view-render-file-ext'])) self::$view__autorender_file = $config['view-render-file-ext'];
     }
 
+    public static function filedata($file){
+        $renderFile = false;
+        if(file_exists(self::$views_dir . startStrSlash($file) . self::$view__autorender_file)) {
+            $view_file = startStrSlash($file) . self::$view__autorender_file;
+            $cached_file = self::$store_dir . startStrSlash($file) . self::$view__autorender_file;
+            $renderFile = true;
+            
+        } else {
+            $view_file = startStrSlash($file) . '.php';
+            $cached_file = self::$store_dir . startStrSlash($file) . '.php';
+        }
+        return [
+            'renderFile' => $renderFile,
+            'view_file' => $view_file,
+            'cached_file' => $cached_file,
+        ];
+    }
+
     public static function include(string $file){
 
         $genTime = microtime(true);
-        $renderFile = false;
+        $filedata = self::filedata($file);
+
+        $renderFile = $filedata['renderFile'];
+        $view_file = $filedata['view_file'];
+        $cached_file = $filedata['cached_file'];
 
         if(file_exists(self::$views_dir . startStrSlash($file) . self::$view__autorender_file)) {
             $view_file = startStrSlash($file) . self::$view__autorender_file;
@@ -50,6 +72,8 @@ class View extends Base {
             $view_data = file_get_contents($view);
 
             if($renderFile){
+                $view_data = ViewBuilder::extended($view_data, $file, $view);
+
                 $view_data = self::auto_tags($view_data);
     
                 $view_data = self::inline_operators($view_data);
@@ -60,6 +84,9 @@ class View extends Base {
             }
 
             createPath(dirname($cached_file));
+
+            //$view_data = str_replace("\n", "", $view_data);
+            //$view_data = str_replace("  ", " ", $view_data);
             
             $view_data .= "<?php\n/*\nGenerated at: " . date('Y-m-d H:i:s') .  "\nFile Hash: " . hash('sha256',$view_data . microtime(true)) . "\nRender Time: " . microtime(true) - $genTime . "s\n*/\n?>";
     
@@ -102,7 +129,7 @@ class View extends Base {
         return $view_data;
     }
 
-    private static function parser($data, $start_tag, $end_tag,?array $nsw = NULL){
+    public static function parser($data, $start_tag, $end_tag,?array $nsw = NULL){
         $arr = [];
         while(1){
             $parsed = string_between($data, $start_tag, $end_tag);

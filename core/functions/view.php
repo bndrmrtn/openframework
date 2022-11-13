@@ -9,6 +9,7 @@ function view(string $file,array $data = [],?int $code = 200){
         foreach($data as $var => $vardata){
             if(is_string($var)){
                 ${$var} = $vardata;
+                $_bag[$var] = $vardata;
             } else {
                 $_bag[] = $vardata;
             }

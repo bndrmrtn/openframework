@@ -19,7 +19,7 @@ class Response {
         if(is_callable($handler) || $handler instanceof Controller){
             $args = getFunctionArgs($handler, $method);
             $built_args = [];
-            $props = Route::$props;
+            $props = self::realProps(Route::$props);
 
             if($args){
                 foreach($args as $i => $arg){
@@ -39,6 +39,40 @@ class Response {
             if(is_string($data)) echo $data;
             exit;
         }
+    }
+
+    private static function realProps(?array $props){
+        $real = [];
+        foreach($props as $name => $value){
+            if(str_contains($name, ':')){
+                $exp_name = explode(':', $name);
+                if(count($exp_name) == 2){
+                    switch(strtolower($exp_name[0])){
+                        case 'int':
+                            $value = intval($value);
+                        break;
+                        case 'float':
+                            $value = floatval($value);
+                        break;
+                        case 'bool':
+                            $value = boolval($value);
+                        break;
+                        case 'string':
+                            $value = strval($value);
+                        break;
+                        case 'base64':
+                            $value = base64_decode($value, true);
+                        break;
+                    }
+                    $real[$exp_name[1]] = $value;
+                } else {
+                    $real[$name] = $value;
+                }
+            } else {
+                $real[$name] = $value;
+            }
+        }
+        return $real;
     }
 
 }

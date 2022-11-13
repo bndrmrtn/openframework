@@ -11,12 +11,12 @@
 
 $_V = array(
     '@' => '1',
-    '.' => '5',
+    '.' => '7',
     'PHP_MIN_REQUIRED' => '8.1.0',
 );
 
 /**
- * @version 1.5
+ * @version 1.7
  * In that version the main change are that
  * the models are updated and upgraded with a fast cache system
  * Thereby reducing the numbers of db queries.
