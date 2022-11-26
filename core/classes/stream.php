@@ -25,15 +25,24 @@ class Stream {
             if(!$stream['call-function']){
                 // call the controller if exists
                 $instance = CallController::call(...$stream['call']);
+                if(method_exists($instance, '__authorize')){
+                    if(!$instance::__authorize()){
+                        return self::noAuth();
+                    }
+                }
                 response()->handle($instance, $stream['call'][1]);
             } else {
                 response()->handle($stream['call']);
             }
         } else {
-            Header::statuscode(401);
-            if(_env('USE_AUTH')) redirect(route('auth.login'));
-            redirect( '/' );
+            self::noAuth();
         }
+    }
+
+    private static function noAuth(){
+        Header::statuscode(401);
+        if(_env('USE_AUTH')) redirect(route('auth.login'));
+        redirect( '/' );
     }
 
     private static function noFile($file){

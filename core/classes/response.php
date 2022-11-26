@@ -49,19 +49,26 @@ class Response {
                 if(count($exp_name) == 2){
                     switch(strtolower($exp_name[0])){
                         case 'int':
+                            if(!is_numeric($value)) self::wrongProp();
                             $value = intval($value);
                         break;
                         case 'float':
+                            if(!(is_numeric($value) && str_contains($value, '.'))) self::wrongProp();
                             $value = floatval($value);
                         break;
                         case 'bool':
-                            $value = boolval($value);
+                            if($value === '0' || $value === 'false') {
+                                $value = false;
+                            } else if($value === '1' || $value === 'true') {
+                                $value = true;
+                            } else self::wrongProp();
                         break;
                         case 'string':
                             $value = strval($value);
                         break;
                         case 'base64':
                             $value = base64_decode($value, true);
+                            if($value === false) self::wrongProp();
                         break;
                     }
                     $real[$exp_name[1]] = $value;
@@ -73,6 +80,10 @@ class Response {
             }
         }
         return $real;
+    }
+
+    private static function wrongProp(){
+        Error::NotFound();
     }
 
 }

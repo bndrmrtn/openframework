@@ -14,7 +14,7 @@
         <p>{{ $message }}</p>
     </div>
     @if(_env('APP_DEV')):
-    <div class="bottom">Render time: {{ getrtime() }}s</div>
+    <div class="bottom">Render time: {{ getrtime() }}s, Debug: <b>{{ $trace['file'] }}:{{ $trace['line'] }}</b></div>
     @endif
 </body>
 </html>

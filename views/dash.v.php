@@ -21,8 +21,8 @@
                                         }}
         <p>Welcome! You're logged in as {{ ucfirst(user()->username) }}.</p>
     </div>
-    @if(_env('APP_DEV')):
-    <div class="bottom">Render time: {{ getrtime() }}s</div>
-    @endif
+    @dev
+    <div class="bottom">Render time: {{ getrtime() }}s, Memory used: {{ formatBytes(memusage()) }}</div>
+    @enddev
 </body>
 </html>

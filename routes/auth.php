@@ -28,7 +28,7 @@ if(_env('USE_AUTH')){
 }
 
 /**
- * Tip:
+ * Hint:
  * Use the user() function to get the currently logged in user's data
  * Example: Hello {{ user()->username }}!
  */
