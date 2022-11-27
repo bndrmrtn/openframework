@@ -23,14 +23,23 @@ class View extends Base {
 
     public static function filedata($file){
         $renderFile = false;
-        if(file_exists(self::$views_dir . startStrSlash($file) . self::$view__autorender_file)) {
-            $view_file = startStrSlash($file) . self::$view__autorender_file;
-            $cached_file = self::$store_dir . startStrSlash($file) . self::$view__autorender_file;
+        $v_p = self::$views_dir;
+        $atp = '';
+        
+        if(str_starts_with($file,'.src/:')) {
+            $file = str_replace('.src/:', '', $file);
+            $v_p = core('template/views');
+            $data = require core('applock.token.php');
+            $atp = startStrSlash($data['framework_builtin_views_directory']);
+        }
+        if(file_exists($v_p . startStrSlash($file) . self::$view__autorender_file)) {
+            $view_file = $v_p . startStrSlash($file) . self::$view__autorender_file;
+            $cached_file = self::$store_dir . $atp . startStrSlash($file) . self::$view__autorender_file;
             $renderFile = true;
             
         } else {
-            $view_file = startStrSlash($file) . '.php';
-            $cached_file = self::$store_dir . startStrSlash($file) . '.php';
+            $view_file = $v_p . startStrSlash($file) . '.php';
+            $cached_file = self::$store_dir . $atp . startStrSlash($file) . '.php';
         }
         return [
             'renderFile' => $renderFile,
@@ -48,19 +57,9 @@ class View extends Base {
         $view_file = $filedata['view_file'];
         $cached_file = $filedata['cached_file'];
 
-        if(file_exists(self::$views_dir . startStrSlash($file) . self::$view__autorender_file)) {
-            $view_file = startStrSlash($file) . self::$view__autorender_file;
-            $cached_file = self::$store_dir . startStrSlash($file) . self::$view__autorender_file;
-            $renderFile = true;
-            
-        } else {
-            $view_file = startStrSlash($file) . '.php';
-            $cached_file = self::$store_dir . startStrSlash($file) . '.php';
-        }
-
         if(!file_exists($cached_file) || (_env('APP_DEV',false) && _env('RERE_VIEWS',false))){
 
-            $view = self::$views_dir . $view_file;
+            $view = $view_file;
             if(!file_exists($view)){
                 $ex = new \Exception();
                 $trace = $ex->getTrace();
@@ -82,9 +81,7 @@ class View extends Base {
     
                 $view_data = str_replace('#@','@',$view_data);
             }
-
             createPath(dirname($cached_file));
-
             //$view_data = str_replace("\n", "", $view_data);
             //$view_data = str_replace("  ", " ", $view_data);
             

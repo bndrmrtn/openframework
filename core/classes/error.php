@@ -33,7 +33,7 @@ class Error {
             if(is_null($trace)) $trace = $debug_backtrace[0];
             $trace['file'] = str_replace(ROOT, '', $trace['file']);
         endif;
-        view('errors/index',[
+        view('.src/:errors',[
             'code' => $code,
             'title' => $title ?: 'Something went wrong',
             'message' => $message ?: 'Something wrong happened on the server',

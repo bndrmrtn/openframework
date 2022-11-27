@@ -15,8 +15,9 @@ class ViewBuilder extends Base {
                $extend = trim(str_replace('@extends:', '', $data[0]));
                $data = $data[1];
 
-               $e_view_fdata = View::filedata($extend);               
-               $extended_view_file = file_get_contents(View::$views_dir . $e_view_fdata['view_file']);
+               $e_view_fdata = View::filedata($extend);
+
+               $extended_view_file = file_get_contents($e_view_fdata['view_file']);
                if(str_contains($extended_view_file, '@section:') && str_contains($extended_view_file, ';')){
                     $sections = self::getsections($extended_view_file);
                     foreach($sections as $name){

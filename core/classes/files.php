@@ -9,7 +9,7 @@ class Files extends Base {
     private $store_data = [];
     private static $static_store = [];
     public static $store = [];
-    private static $store_path = CORE . '/app/storage';
+    private static $store_path = ROOT . '/storage';
     private static $data_store = [];
     private static $tempNameLinks = [];
 

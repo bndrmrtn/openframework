@@ -56,7 +56,7 @@ class Route {
         return $this;
     }
 
-    public function control(string|array|callable $file){
+    public function control(array|callable $file){
         $key = $this->name;
         if(!$this->name) $key = count(static::$routes) + 1;
         static::$used[] = [ $this->method => $this->fullpath, 'key' => $key ];
@@ -89,6 +89,10 @@ class Route {
 
     public static function delete($uri){
         return new Route('delete',$uri);
+    }
+
+    public static function all($uri){
+        return new RouteAll($uri);
     }
 
     private static function makeUri($uri){

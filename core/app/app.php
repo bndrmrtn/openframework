@@ -34,6 +34,8 @@ class Framework {
         // boot all the classes that has that functionality
         self::bootClasses();
 
+        require core('applock.generator.php');
+
         if(file_exists(ROOT . '/app/app.php')) require ROOT . '/app/app.php';
 
         // return a simple then statement, that runs after that function
