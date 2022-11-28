@@ -1,18 +1,19 @@
-@extends:auth/template;
+@extends:.src/:auth/template;
 
 @yield:form;
 
-<h3>Login</h3>
+<h3>Register</h3>
 {{
-     import('form',[
-          'route' => route('auth.login'),
+     view('.src/:auth/form',[
+          'route' => route('auth.register'),
           'fields' => [
           'username' => [ ],
+          'email' => [ 'type' => 'email' ],
           'password' => [ 'type' => 'password' ]
           ],
           'message' => $message,
           'errors' => $errors,
-          'form_submit' => 'Login'
+          'form_submit' => 'Register'
      ])
 }}
 

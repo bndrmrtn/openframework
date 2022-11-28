@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-{{ import('head') }}
+{{ view('.src/:auth/head') }}
 <body>
     <a href="{{route('index')}}" style="position:fixed;top:0;right:0;z-index:10;" class="m-2 btn btn-secondary">Home</a>
     <div class="login-box resize-form"> 

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-    {{ import('assets/head') }}
+    {{ import('head') }}
 <body>
-     {{ import('assets/nav',[ 'links' => $links ]) }}
+    {{ import('assets/nav',[ 'links' => $links ]) }}
 
-     @section:main;
+    @section:main;
 
-     @dev
-     <div class="bottom">Render time: {{ getrtime() }}s, Memory used: {{ formatBytes(memusage()) }}</div>
-     @enddev
+    @dev
+    <div class="bottom">Render time: {{ getrtime() }}s, Memory used: {{ formatBytes(memusage()) }}</div>
+    @enddev
 </body>
 </html>

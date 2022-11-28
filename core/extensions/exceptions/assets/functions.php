@@ -64,6 +64,7 @@ function log_error( $num, $str, $file, $line, $context = null ){
     $e = new ErrorException( $str, 0, $num, $file, $line );
     if(!_env('APP_DEV',false)){
         $message = date('Y-m-d H:i:s') . "\nType: " . get_class( $e ) . "; Message: {$e->getMessage()};\nFile: {$e->getFile()}; Line: {$e->getLine()};\n";
+        $message .= 'Requested: ' . urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) . "\n";
         $logdir = CORE . "/logs/";
         if(!is_dir($logdir)) mkdir($logdir);
         $logfile = $logdir . date('Y-m-d') . '.log'; 

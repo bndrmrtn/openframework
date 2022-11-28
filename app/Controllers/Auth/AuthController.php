@@ -19,7 +19,7 @@ class AuthController extends Controller {
       */
      public function loginView(){
           // simply return the login form without any data
-          return view('auth/login');
+          return view('.src/:auth/login');
      }
 
      public function login(){
@@ -57,7 +57,7 @@ class AuthController extends Controller {
           /**
           * Then return the view with the array of data
           */
-          return view('auth/login',$data);
+          return view('.src/:auth/login',$data);
      }
 
      /**
@@ -65,7 +65,7 @@ class AuthController extends Controller {
       */
 
      public function registerView(){
-          return view('auth/register');
+          return view('.src/:auth/register');
      }
 
      public function register(){
@@ -108,7 +108,7 @@ class AuthController extends Controller {
 
           if($error = Auth::hasError()) $data['message'] = $error;
 
-          return view('auth/register',$data);
+          return view('.src/:auth/register',$data);
      }
 
      /**
@@ -140,7 +140,7 @@ class AuthController extends Controller {
           }
 
           // return to the verification view
-          return view('auth/verify', compact('msg'));
+          return view('.src/:auth/verify', compact('msg'));
      }
 
 }

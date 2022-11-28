@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-{{ import('head') }}
+{{ view('.src/:auth/head') }}
 <body>
     <div class="login-box"> 
         <img class="user" src="{{url('/framework.svg')}}" height="100px" width="100px">
