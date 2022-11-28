@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use DB;
-use Core\Accounts\User;
+use Core\App\Accounts\User;
 use Core\App\Auth;
-use Core\Helpers\Dates;
+use Core\App\Helpers\Dates;
 use Core\Base\Controller;
 use App\Model\EmailVerifications;
 
