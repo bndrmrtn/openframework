@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    {{ import('head') }}
+    {{ import('assets/head') }}
 <body>
     {{ import('assets/nav',[ 'links' => $links ]) }}
 
