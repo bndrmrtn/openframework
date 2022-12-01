@@ -10,6 +10,10 @@ class Serve extends ClassROOT {
     ];
     private static $hoststore = CORE . '/cache/dev/host.php';
 
+    public static function getStore(){
+        return self::$hoststore;
+    }
+
     public static function run($custom_ports = false){
         createPath(dirname(self::$hoststore));
         

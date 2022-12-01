@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html>
-{{ view('.src/:auth/head') }}
-<body>
-    <div class="login-box"> 
-        <img class="user" src="{{url('/framework.svg')}}" height="100px" width="100px">
-        <h3>{{$msg}}</h3>
-        <a class="btn btn-primary" href="{{ route('auth.login') }}">Back to Login</a>
-    </div>
-</body>
-</html>
+@extends:.src/:assets/app;
+
+@yield:main;
+
+<div class="ftext shadow-sm">
+    <h1 style="font-size: 40px;">{{ $msg }}</h1>
+    <a class="btn btn-framework" href="{{ route('auth.login') }}">Back to Login</a>
+</div>
+
+@endyield:main;

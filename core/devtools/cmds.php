@@ -4,6 +4,7 @@ $cmds = array(
     'noargs' => array(
         'serve' => [ \DEV\Serve::class, 'run' ],
         'routes' => [ \DEV\Routes::class, 'list' ],
+        'test' => [ \DEV\Test::class, 'main' ],
     ),
     'args' => array(
         'serve' => [ \DEV\Serve::class, 'customPort' ],

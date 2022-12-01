@@ -8,6 +8,7 @@ use Core\App\Auth;
 use Core\App\Helpers\Dates;
 use Core\Base\Controller;
 use App\Model\EmailVerifications;
+use Routing\Route;
 
 // uncomment if you need this
 //if(Auth::is_loggedin()) location('/');
@@ -19,7 +20,7 @@ class AuthController extends Controller {
       */
      public function loginView(){
           // simply return the login form without any data
-          return view('.src/:auth/login');
+          return view('.src/:auth/auth', ['links' => $this->navbar(), 'name' => 'Login', 'form' => $this->form()]);
      }
 
      public function login(){
@@ -38,12 +39,17 @@ class AuthController extends Controller {
           */
           $data = [];
 
+          // just the page config
+          $data['links'] = $this->navbar();
+          $data['name'] = 'Login';
+          $data['form'] = $this->form();
+
           /**
           * if the auth has error array
           * add it to the created array
           */
           if($errors = Auth::errors_array()){
-               $data['errors'] = $errors;
+               $data['form']['errors'] = $errors;
           }
 
           /**
@@ -51,13 +57,13 @@ class AuthController extends Controller {
           * add it to the array
           */
           if($error = Auth::hasError()){
-               $data['message'] = $error;
+               $data['form']['message'] = $error;
           }
 
           /**
           * Then return the view with the array of data
           */
-          return view('.src/:auth/login',$data);
+          return view('.src/:auth/auth',$data);
      }
 
      /**
@@ -65,7 +71,7 @@ class AuthController extends Controller {
       */
 
      public function registerView(){
-          return view('.src/:auth/register');
+          return view('.src/:auth/auth', ['links' => $this->navbar('register'), 'name' => 'Register', 'form' => $this->form('register')]);
      }
 
      public function register(){
@@ -104,11 +110,22 @@ class AuthController extends Controller {
           // just return the auth errors if has, read more about it in the login controller
           $data = [];
 
+          // just the page config
+          $data['links'] = $this->navbar('register');
+          $data['name'] = 'Register';
+          $data['form'] = $this->form('register');
+
           if($errors = Auth::errors_array()) $data['errors'] = $errors;
 
           if($error = Auth::hasError()) $data['message'] = $error;
 
-          return view('.src/:auth/register',$data);
+          // just the page data
+
+          $data['links'] = $this->navbar('register');
+          $data['name'] = 'Register';
+          $data['form'] = $this->form('register');
+
+          return view('.src/:auth/auth',$data);
      }
 
      /**
@@ -139,8 +156,60 @@ class AuthController extends Controller {
                DB::delete('email_verifications', [ 'user_id' => $data->user_id]);
           }
 
+          $links = $this->navbar();
+
           // return to the verification view
-          return view('.src/:auth/verify', compact('msg'));
+          return view('.src/:auth/verify', compact('msg', 'links'));
+     }
+
+     private function navbar($type = 'login'){
+          if($type == 'login'){
+               return [
+                    ['href' => route('index'), 'title' => 'Home'],
+                    ['href' => route('auth.login'), 'title' => 'Login', 'active'],
+                    ['href' => route('auth.register'), 'title' => 'Register'],
+               ];
+          } else if($type == 'register'){
+               return [
+                    ['href' => route('index'), 'title' => 'Home'],
+                    ['href' => route('auth.login'), 'title' => 'Login'],
+                    ['href' => route('auth.register'), 'title' => 'Register', 'active'],
+               ];
+          } else {
+               return [
+                    ['href' => route('index'), 'title' => 'Home'],
+                    ['href' => route('auth.login'), 'title' => 'Login'],
+                    ['href' => route('auth.register'), 'title' => 'Register'],
+               ];
+          }
+     }
+
+     private function form($type = 'login'){
+          if($type == 'login'){
+               return [
+                    'route' => route('auth.login'),
+                    'fields' => [
+                    'username' => [ ],
+                    'password' => [ 'type' => 'password' ]
+                    ],
+                    'message' => '',
+                    'errors' => NULL,
+                    'form_submit' => 'Login'
+               ];
+          } else if($type == 'register'){
+               return [
+                    'route' => route('auth.register'),
+                    'fields' => [
+                    'username' => [ ],
+                    'email' => [ 'type' => 'email' ],
+                    'password' => [ 'type' => 'password' ]
+                    ],
+                    'message' => '',
+                    'errors' => NULL,
+                    'form_submit' => 'Register'
+               ];
+          }
+          return false;
      }
 
 }

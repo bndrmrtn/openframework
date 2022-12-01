@@ -8,7 +8,9 @@ body {
     width: 100%;
     height: 100vh;
     color:white;
+    border-bottom:2px solid #47da58;
 }
+
 .ftext {
     position: absolute;
     top: 50%;
@@ -16,6 +18,17 @@ body {
     transform: translate(-50%, -50%);
     z-index: 2;
     text-align: center;
+    padding:10px;
+    padding-top:20px;
+    padding-bottom:20px;
+    border-radius: 5px;
+    background-color: #22232e;
+}
+
+.bottom-bg-green {
+    background-color: #47da58;
+    padding:.5px;
+    border-radius: 5px;
 }
 
 @media all and (max-width:40em){
@@ -38,6 +51,13 @@ a:hover {
     bottom: 0;
     left: 0;
     z-index:2;
+}
+
+.nav-app {
+    background-color: #22232e;
+    border-right:2px solid #47da58;
+    border-left:2px solid #47da58;
+    border-radius: 5px;
 }
 
 .navbar-toggler, .navbar-toggler:focus, .navbar-toggler:active, .navbar-toggler-icon:focus {
@@ -71,4 +91,56 @@ a:hover {
     background-color: #444;
     transition: .3s;
     border-color: #444;
+}
+
+/**
+ * login
+ */
+
+input {
+    width: 100%;
+    padding: 10px;
+    outline: none;
+    border: 2px solid #22232e;
+    transition: .3s;
+}
+
+input:hover, input:focus, input:active {
+    border: 2px solid #47da58;
+}
+
+/** login */
+
+.login-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 350px;
+    min-height: 200px;
+    border-radius: 10px;
+    padding: 40px;
+    box-sizing: border-box;
+    transition: .5s;
+}
+
+/** custom bs color */
+
+.btn-framework {
+    background-color: #47da58!important;
+    color:#000000;
+    border: 1px solid #42cc52;
+    transition: .25s;
+}
+
+.btn-framework:hover {
+    color:#000000;
+    background-color: #3dbe4c!important;
+    border: 1px solid #39ab46;
+}
+
+.btn-framework:active,
+.btn-framework:focus
+{
+    box-shadow: 0 0 0 0.23em #47da582d!important;
 }
