@@ -13,7 +13,7 @@
 
 namespace App\Controller;
 
-use Core\Accounts\User;
+use Core\App\Accounts\User;
 use Core\App\Request;
 use Core\App\Session;
 use Core\App\Validation;
