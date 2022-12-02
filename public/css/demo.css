@@ -23,6 +23,7 @@ body {
     padding-bottom:20px;
     border-radius: 5px;
     background-color: #22232e;
+    border-top:2px solid #47da587c;
 }
 
 .bottom-bg-green {
