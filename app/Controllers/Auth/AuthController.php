@@ -115,15 +115,9 @@ class AuthController extends Controller {
           $data['name'] = 'Register';
           $data['form'] = $this->form('register');
 
-          if($errors = Auth::errors_array()) $data['errors'] = $errors;
+          if($errors = Auth::errors_array()) $data['form']['errors'] = $errors;
 
-          if($error = Auth::hasError()) $data['message'] = $error;
-
-          // just the page data
-
-          $data['links'] = $this->navbar('register');
-          $data['name'] = 'Register';
-          $data['form'] = $this->form('register');
+          if($error = Auth::hasError()) $data['form']['message'] = $error;
 
           return view('.src/:auth/auth',$data);
      }
