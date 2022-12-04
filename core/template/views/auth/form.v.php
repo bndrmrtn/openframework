@@ -10,7 +10,10 @@
     <button class="btn btn-framework w-100 my-2" type="submit">{{$form_submit ?: 'Submit'}}</button>
     <div class="text-center">
         @if($message):
-        <p class="text-light">{{ $message }}</p>
+        <p class="text-light">
+            {{ $message }} {{ \Core\App\Session::get('back.message') }}
+        </p>
         @endif
     </div>
+    @CSRF
 </form>

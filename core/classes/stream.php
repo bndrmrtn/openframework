@@ -4,6 +4,7 @@ namespace Routing;
 
 use Core\App\CallController;
 use Core\App\Error;
+use Core\App\Request;
 use Header;
 
 class Stream {
@@ -28,6 +29,11 @@ class Stream {
                 if(method_exists($instance, '__authorize')){
                     if(!$instance::__authorize()){
                         return self::noAuth();
+                    }
+                }
+                if(method_exists($instance, '__csrf') && _env('USE_CSRF')){
+                    if(!$instance::__csrf() && Request::method() !== 'get'){
+                        return back('Failed to validate CSRF Token');
                     }
                 }
                 response()->handle($instance, $stream['call'][1]);

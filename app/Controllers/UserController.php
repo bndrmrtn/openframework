@@ -88,7 +88,7 @@ class UserController extends Controller {
                // if the sessions are enabled (required for the auth by default)
                // you could create a one request data that will stored and
                // automaticly being deleted after the next request
-               Session::oneReqData('errors', $request->getErrors()); // this data will stored in the $_SESSION variable
+               Session::SingleUse('errors', $request->getErrors()); // this data will stored in the $_SESSION variable
                // and redirect to the GET method page
                redirect(route('user', user()->username));
           }

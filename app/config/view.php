@@ -17,7 +17,7 @@ return array(
 
     'replace-tags-to' => array(
         '@else:' => 'else:',
-        '@CSRF' => 'echo \Core\Security\Csrf::tokenInput()',
+        '@CSRF' => 'echo \Core\App\Security\Csrf::tokenInput()',
         '@dev' => 'if(_env(\'APP_DEV\')):',
         '@enddev' => 'endif',
     ),

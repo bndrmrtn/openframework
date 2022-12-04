@@ -8,4 +8,8 @@ abstract class Controller extends Base {
           return true;
      }
 
+     public static function __csrf(){
+          return true;
+     }
+
 }

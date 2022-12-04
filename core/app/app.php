@@ -3,6 +3,7 @@
 namespace Core\Framework;
 
 use Core\App\Error;
+use Core\App\Session;
 use Routing\Route;
 use Routing\Stream;
 use Tools\THEN;
@@ -38,6 +39,8 @@ class Framework {
 
         if(file_exists(ROOT . '/app/app.php')) require ROOT . '/app/app.php';
 
+
+        Session::SingleUse('framework.url.previous', urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
         // return a simple then statement, that runs after that function
         return new THEN();
     }

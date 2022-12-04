@@ -12,7 +12,7 @@ use Core\Base\Base;
 class Session extends Base {
 
     private static array $oneReqDatas = [];
-    private static string $ordkey = 'only-request-data-storage';
+    private static string $singlkey = 'single-requested-data-storage';
     public static string $id;
 
     public static function boot() {
@@ -27,7 +27,7 @@ class Session extends Base {
             session_id($id);
             session_start();
         }
-        self::checkoneReqDs();
+        self::checkSingles();
     }
 
     private static function headerBearer():string|false {
@@ -66,23 +66,25 @@ class Session extends Base {
     public static function get($key){
         if(isset($_SESSION[$key])){
             return $_SESSION[$key];
+        } else if(isset(self::$oneReqDatas[$key])){
+            return self::$oneReqDatas[$key];
         }
         return NULL;
     }
 
-    public static function oneReqData($key, $val){
-        if(!isset($_SESSION[self::$ordkey])){
-            $_SESSION[self::$ordkey] = [];
+    public static function SingleUse($key, $val){
+        if(!isset($_SESSION[self::$singlkey])){
+            $_SESSION[self::$singlkey] = [];
         }
-        $_SESSION[self::$ordkey][$key] = $val;
+        $_SESSION[self::$singlkey][$key] = $val;
     }
 
-    private static function checkoneReqDs(){
-        if(isset($_SESSION[self::$ordkey])){
-            foreach($_SESSION[self::$ordkey] as $key => $val){
+    private static function checkSingles(){
+        if(isset($_SESSION[self::$singlkey])){
+            foreach($_SESSION[self::$singlkey] as $key => $val){
                 self::$oneReqDatas[$key] = $val;
             }
-            unset($_SESSION[self::$ordkey]);
+            unset($_SESSION[self::$singlkey]);
         }
     }
 

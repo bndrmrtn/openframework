@@ -3,17 +3,23 @@
 namespace App\Controller;
 
 use DB;
-use Core\App\Accounts\User;
 use Core\App\Auth;
-use Core\App\Helpers\Dates;
-use Core\Base\Controller;
-use App\Model\EmailVerifications;
 use Routing\Route;
+use Core\Base\Controller;
+use Core\App\Accounts\User;
+use Core\App\Helpers\Dates;
+use Core\App\Security\Csrf;
+use App\Model\EmailVerifications;
+use Core\App\Session;
 
 // uncomment if you need this
 //if(Auth::is_loggedin()) location('/');
 
 class AuthController extends Controller {
+
+     public static function __csrf(){
+          return Csrf::is_valid();
+     }
 
      /**
       * Login methods
