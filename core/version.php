@@ -12,6 +12,7 @@
 $_V = array(
     '@' => '1',
     '.' => '8',
+    '#' => '2',
     'PHP_MIN_REQUIRED' => '8.1.0',
 );
 
@@ -31,4 +32,4 @@ if(version_compare(PHP_VERSION, $_V['PHP_MIN_REQUIRED'], '<=')){
     exit;
 }
 
-define('VERSION', $_V['@'] . '.' . $_V['.']);
+define('VERSION', $_V['@'] . '.' . $_V['.'] . '.' . $_V['#']);

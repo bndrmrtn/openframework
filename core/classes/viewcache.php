@@ -10,7 +10,7 @@ class View extends Base {
     public static $store_dir = CACHE . '/views';
     private static $ez_tags = [ '{{', '}}', '*', '!', '--' ];
     public static $views_dir = ROOT . '/views';
-    private static $view__autorender_file = '.view.php';
+    private static $view__autorender_file = '.view.{ext}';
     private static array $custom_replace = [];
     
     public static function boot(){
@@ -32,19 +32,31 @@ class View extends Base {
             $data = require core('applock.token.php');
             $atp = startStrSlash($data['framework_builtin_views_directory']);
         }
-        if(file_exists($v_p . startStrSlash($file) . self::$view__autorender_file)) {
-            $view_file = $v_p . startStrSlash($file) . self::$view__autorender_file;
-            $cached_file = self::$store_dir . $atp . startStrSlash($file) . self::$view__autorender_file;
+        $file_ext = 'php';
+        if(str_contains($file, '.')) {
+            $ext = explode('.', $file);
+            $file_ext = $ext[array_key_last($ext)];
+            unset($ext[array_key_last($ext)]);
+            $file = implode('.', $ext);
+        }
+        $varf = str_replace('{ext}', $file_ext, self::$view__autorender_file);
+        if(file_exists($v_p . startStrSlash($file) . $varf)) {
+            $view_file = $v_p . startStrSlash($file) . $varf;
+            $cached_file = self::$store_dir . $atp . startStrSlash($file) . $varf;
             $renderFile = true;
             
         } else {
-            $view_file = $v_p . startStrSlash($file) . '.php';
-            $cached_file = self::$store_dir . $atp . startStrSlash($file) . '.php';
+            $view_file = $v_p . startStrSlash($file) . '.' . $file_ext;
+            $cached_file = self::$store_dir . $atp . startStrSlash($file) . '.' . $file_ext;
+        }
+        if($file_ext !== 'php' && $renderFile) {
+            $cached_file .= '.php';
         }
         return [
             'renderFile' => $renderFile,
             'view_file' => $view_file,
             'cached_file' => $cached_file,
+            'file_ext' => $file_ext,
         ];
     }
 
@@ -56,6 +68,7 @@ class View extends Base {
         $renderFile = $filedata['renderFile'];
         $view_file = $filedata['view_file'];
         $cached_file = $filedata['cached_file'];
+        $file_ext = $filedata['file_ext'];
 
         if(!file_exists($cached_file) || (_env('APP_DEV',false) && _env('RERE_VIEWS',false))){
 
@@ -64,14 +77,18 @@ class View extends Base {
                 $ex = new \Exception();
                 $trace = $ex->getTrace();
                 $final_call = $trace[1];
-                if(str_starts_with($final_call['file'], self::$store_dir)) log_error(0,'Trying to import a non-existing file ({VIEWS_DIR}' . $view_file . ') with function "' . $final_call['function'] . '"',str_replace(self::$store_dir,self::$views_dir,$final_call['file']),$final_call['line']);
-                throw new Exception('Trying to import a non-existing file ({VIEWS_DIR}' . $view_file);
+                if(str_starts_with($view_file, self::$views_dir)) $view_file_path = str_replace(self::$views_dir, '{VIEWS_DIR}', $view_file);
+                if(str_starts_with($view_file, core('template/views'))) $view_file_path = str_replace(core('template/views'), '{TEMPLATES_DIR}', $view_file);
+
+                throw new Exception('Trying to import a non-existing file (' . $view_file_path . ')');
             }
 
             $view_data = file_get_contents($view);
 
             if($renderFile){
-                $view_data = ViewBuilder::extended($view_data, $file, $view);
+                while(str_starts_with($view_data, '@extends:')) {
+                    $view_data = ViewBuilder::extended($view_data, $file, $view);
+                }
 
                 $view_data = self::auto_tags($view_data);
     
@@ -85,7 +102,7 @@ class View extends Base {
             //$view_data = str_replace("\n", "", $view_data);
             //$view_data = str_replace("  ", " ", $view_data);
             
-            $view_data .= "<?php\n/*\nGenerated at: " . date('Y-m-d H:i:s') .  "\nFile Hash: " . hash('sha256',$view_data . microtime(true)) . "\nRender Time: " . microtime(true) - $genTime . "s\n*/\n?>";
+            if($renderFile) $view_data .= "<?php\n/*\nGenerated at: " . date('Y-m-d H:i:s') .  "\nFile Hash: " . hash('sha256',$view_data . microtime(true)) . "\nRender Time: " . microtime(true) - $genTime . "s\n*/\n?>";
     
             file_put_contents($cached_file,$view_data);
         }

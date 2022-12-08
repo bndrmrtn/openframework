@@ -4,13 +4,11 @@ namespace App\Controller;
 
 use DB;
 use Core\App\Auth;
-use Routing\Route;
 use Core\Base\Controller;
 use Core\App\Accounts\User;
 use Core\App\Helpers\Dates;
 use Core\App\Security\Csrf;
 use App\Model\EmailVerifications;
-use Core\App\Session;
 
 // uncomment if you need this
 //if(Auth::is_loggedin()) location('/');

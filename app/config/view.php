@@ -13,7 +13,7 @@ return array(
         4 => '--', // use this to comment
     ),
 
-    'view-render-file-ext' => '.v.php', // file extension to render
+    'view-render-file-ext' => '.v.{ext}', // file extension to render
 
     'replace-tags-to' => array(
         '@else:' => 'else:',
