@@ -1,0 +1,1 @@
+{{ view('.src/:helpers/page-dev/index') }}

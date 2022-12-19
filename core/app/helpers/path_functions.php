@@ -43,3 +43,7 @@ function asset($asset){
 function cache($path){
     return CORE . '/cache' . startStrSlash($path);
 }
+
+function urlPath(){
+    return urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+}

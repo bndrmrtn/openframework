@@ -1,6 +1,11 @@
 <?php
 
 function view(string $file,array $data = [],?int $code = 200){
+    $GLOBALS['views_data__info'][] = [
+        'file' => $file,
+        'data' => $data,
+        'code' => $code,
+    ];
     if(!is_null($code)) Header::statuscode($code);
     if(Core\App\Request::wantsJson() || !_env('USE_VIEWS',true)){
         json($data,$code);

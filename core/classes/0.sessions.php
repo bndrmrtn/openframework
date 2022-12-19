@@ -72,6 +72,10 @@ class Session extends Base {
         return NULL;
     }
 
+    public static function set($key, $value):void {
+        $_SESSION[$key] = $value;
+    }
+
     public static function SingleUse($key, $val){
         if(!isset($_SESSION[self::$singlkey])){
             $_SESSION[self::$singlkey] = [];
