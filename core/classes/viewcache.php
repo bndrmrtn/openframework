@@ -14,7 +14,7 @@ class View extends Base {
     private static array $custom_replace = [];
     
     public static function boot(){
-        $config = require ROOT . '/app/config/view.php';
+        $config = require config('view');
         if(isset($config['ez-tags'])) self::$ez_tags = $config['ez-tags'];
         if(isset($config['view-folder'])) self::$views_dir = $config['view-folder'];
         if(isset($config['replace-tags-to'])) self::$custom_replace = $config['replace-tags-to'];

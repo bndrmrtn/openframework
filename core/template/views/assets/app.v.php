@@ -16,6 +16,7 @@
 
     @dev
     <div class="bottom">Render time: {{ getrtime() }}s, Memory used: {{ formatBytes(memusage()) }}</div>
+    @page_dev
     @enddev
 </body>
 </html>

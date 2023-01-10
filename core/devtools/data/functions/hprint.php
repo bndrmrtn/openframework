@@ -5,7 +5,10 @@ function headerPrint($text = ''){
 }
 
 function headerPrintBg($text = '',$p = false){
-    if($p) headerPrintBg(str_repeat(' ',exec('tput cols')));
+    if(PHP_OS !== 'WINNT') $cols = intval(exec('tput cols'));
+    else $cols = 0;
+    if(!is_int($cols)) $cols = 5;
+    if($p) headerPrintBg(str_repeat(' ',$cols));
     echo(DEV\ColorCLI::getColoredString(terminalCenter($text),NULL,'red'));
-    if($p) headerPrintBg(str_repeat(' ',exec('tput cols')));
+    if($p) headerPrintBg(str_repeat(' ',$cols));
 }

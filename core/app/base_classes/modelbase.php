@@ -340,7 +340,7 @@ abstract class ModelBase extends Base {
     /**
      * @return array Execute all the setted select config models
      */
-    public function get(){
+    public function get($with_fast_var = true){
         $config = $this->__select;
         $binding = [];
 
@@ -433,19 +433,32 @@ abstract class ModelBase extends Base {
 
             $relation::select('*')->or([$key2 => $ids])->get();
 
-
             if(!$firstval){
                 foreach($models as $key => $model){
-                    $models[$key]->{$relation::$_table} = new $relation($model->{$key1}, $key2);
-                    $models[$key]->all_fields[$relation::$_table] = $models[$key]->{$relation::$_table};
-                    $models[$key]->fields[$relation::$_table] = $models[$key]->{$relation::$_table};
+                    $model_data = new $relation($model->{$key1}, $key2);
+                    if($with_fast_var) $models[$key]->{$relation::$_table} = $model_data;
+                    if($with_fast_var) $models[$key]->all_fields[$relation::$_table] = $model_data;
+                    $models[$key]->fields[$relation::$_table] = $model_data->fields;
                 }
             } else {
-                $models->{$relation::$_table} = new $relation($models->{$key1}, $key2);
-                $models->all_fields[$relation::$_table] = $models->{$relation::$_table};
-                $models->fields[$relation::$_table] = $models->{$relation::$_table};
+                $model_data = new $relation($models->{$key1}, $key2);
+                if($with_fast_var) $models->{$relation::$_table} = $model_data;
+                if($with_fast_var) $models->all_fields[$relation::$_table] = $model_data;
+                $models->fields[$relation::$_table] = $model_data->fields;
             }
 
+        }
+
+        if(!$with_fast_var){
+            if(!$firstval){
+                $ms = [];
+                foreach($models as $i => $model){
+                    $ms[$i] = $model->fields;
+                }
+                return $ms;
+            } else {
+                return $models->fields;
+            }
         }
 
         return $models;

@@ -17,6 +17,7 @@ class Route {
     public static ?array $props = [];
     private static $route_methods = [];
     private static $route_name;
+    private static string $prefix = '';
 
     // supported request methods
     private static array $supported_methods = [ 'get', 'post', 'put', 'delete' ];
@@ -24,11 +25,13 @@ class Route {
     public function __construct($method, $uri)
     {
         $this->method = $method;
-        $this->route = static::makeUri($uri);
         if($uri != '/'){
             if(!str_starts_with($uri,'/')) $uri = '/' . $uri;
             if(str_ends_with($uri,'/')) $uri = substr($uri, 0, -1);
         }
+        $uri = self::$prefix . $uri;
+        $this->route = static::makeUri($uri);
+
         // check if route not declared twice
         if(array_search($uri,array_column(self::$used,$method)) !== false){
             throw new \Exception('This route[' . $uri . '] is already declared');
@@ -196,7 +199,14 @@ class Route {
     }
 
     public static function load(){
-        loadDirFiles(ROOT . '/routes/');
+        $dir = ROOT . '/routes/';
+        if(is_dir($dir)){
+            $files = scanDirectory($dir);
+            if(!empty($files)) foreach($files as $file){
+                self::$prefix = '';
+                require endStrSlash($dir) . $file;
+            }
+        }
     }
 
     private static function routeByKey($key,$exception = false){
@@ -251,6 +261,12 @@ class Route {
 
     public static function devGetRoutes(){
         return self::$routes;
+    }
+
+    public static function prefix($pref){
+        $pref = startStrSlash($pref);
+        if(str_ends_with($pref, '/')) $pref = substr($pref, 0, -1);
+        self::$prefix = $pref;
     }
 
 }

@@ -28,15 +28,17 @@ class DEVLoader {
     }
 
     public static function createApp(){
+        $cols = exec('tput cols');
+        if(!is_int($cols)) $cols = 5;
         echo chr(27).chr(91).'H'.chr(27).chr(91).'J';
-        headerPrint(str_repeat(' ',exec('tput cols')));
+        headerPrint(str_repeat(' ',$cols));
         headerPrint(' ____             _____           _     ');
         headerPrint('|  _ \  _____   _|_   _|__   ___ | |___ ');
         headerPrint('| | | |/ _ \ \ / / | |/ _ \ / _ \| / __|');
         headerPrint('| |_| |  __/\ V /  | | (_) | (_) | \__ \\');
         headerPrint('|____/ \___| \_/   |_|\___/ \___/|_|___/');
         headerPrint('OpenFramework V' . VERSION);
-        headerPrint(str_repeat(' ',exec('tput cols')));
+        headerPrint(str_repeat(' ',$cols));
         _e();
         return new App;
     }

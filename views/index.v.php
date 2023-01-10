@@ -11,6 +11,5 @@
     This is a development tool for OpenFramework,
     Use it anywhere, it could help a lot ;)
 }}
-@page_dev
 
 @endyield:main;

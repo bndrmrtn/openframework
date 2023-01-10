@@ -4,7 +4,11 @@ function textFillDots($data){
 
     $find = ':dots:';
 
-    $cols = intval(exec('tput cols'));
+    
+    if(PHP_OS !== 'WINNT') $cols = intval(exec('tput cols'));
+    else $cols = 0;
+
+    if(!is_int($cols)) $cols = 0;
 
     $data = explode("\n",$data);
 
@@ -18,6 +22,7 @@ function textFillDots($data){
 }
 
 function terminalCenter($text, $pad_string = ' ') {
-    $window_size = (int) `tput cols`;
+    if(PHP_OS !== 'WINNT') $window_size = (int) intval(exec('tput cols'));
+    else $window_size = 0;
     return str_pad($text, $window_size, $pad_string, STR_PAD_BOTH)."\n";
 }
