@@ -4,6 +4,7 @@ namespace Core\App;
 
 use Core\App\Request;
 use Core\Base\Controller;
+use Core\Base\FilterResult;
 use Routing\Route;
 
 class Response {
@@ -47,6 +48,10 @@ class Response {
             if(str_contains($name, ':')){
                 $exp_name = explode(':', $name);
                 if(count($exp_name) == 2){
+                    if(str_starts_with($exp_name[0], '@')) {
+                        $real[$exp_name[1]] = self::useFilter($value, $exp_name);
+                        break;
+                    }
                     switch(strtolower($exp_name[0])){
                         case 'int':
                             if(!is_numeric($value)) self::wrongProp();
@@ -80,6 +85,22 @@ class Response {
             }
         }
         return $real;
+    }
+
+    private static function useFilter($value, $name){
+        $className = 'App\Tools\Routing\Filter\\' . substr($name[0],1);
+        if(class_exists($className)){
+            $filter = new $className;
+            $result = $filter->Match($value);
+            if($result instanceof FilterResult){
+                $read = $result->read();
+                if(!$read->isValid) {
+                    $filter->onFail($read);
+                    exit;
+                }
+                return $read->value;
+            } else throw new \Exception("Invalid filter data, please check the FilterResult class");
+        } else throw new \Exception("Filter class not found");
     }
 
     private static function wrongProp(){

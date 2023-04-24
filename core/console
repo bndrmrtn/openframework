@@ -1,0 +1,19 @@
+<?php
+
+// use the 2 most important classes
+use Core\Framework\Framework;
+
+// define the application start time
+define('START_TIME', microtime(true));
+
+define('F_MEM_USAGE',memory_get_usage());
+
+const DEVROOT = __DIR__ . DIRECTORY_SEPARATOR . 'devtools';
+
+// require the initializer tools and the whole app
+require __DIR__ . '/../core/initialize.php';
+
+// load the framework with mode: console
+$console = Framework::load('console');
+
+$console->run();

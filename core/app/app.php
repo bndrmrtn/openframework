@@ -10,7 +10,11 @@ use Tools\THEN;
 
 class Framework {
 
-    public static function load(){
+    private static $runType = null;
+
+    public static function load($type = 'web'){
+        self::$runType = $type;
+
         // get the required directories to load
         $load_dir_files = require __DIR__ . '/dirs.php';
 
@@ -25,11 +29,27 @@ class Framework {
             }
         }
 
+        // load models
+        self::loadAll(ROOT . '/app/Models');
+        self::loadAll(ROOT . '/app/Tools');
+        if(self::$runType == 'web') return self::loadWeb();
+        else if(self::$runType == 'console') return self::loadConsole();
+        echo "Failed to load framework, the specified run type [$type] is not supported";
+    }
+
+    public static function isWeb(){
+        return self::$runType == 'web';
+    }
+
+    public static function isConsole(){
+        return self::$runType == 'console';
+    }
+
+    private static function loadWeb(){
         // include the database if it's required
         if(_env('USE_DB', false)) require CORE . '/database/loader.php';
 
         // load controller classes
-        self::loadAll(ROOT . '/app/Models');
         self::loadAll(ROOT . '/app/Controllers');
 
         // boot all the classes that has that functionality
@@ -39,10 +59,33 @@ class Framework {
 
         if(file_exists(ROOT . '/app/app.php')) require ROOT . '/app/app.php';
 
-
         Session::SingleUse('framework.url.previous', urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
         // return a simple then statement, that runs after that function
         return new THEN();
+    }
+
+    private static function loadConsole(){
+        // Console Settings
+        ini_set('display_errors', 1);
+        error_reporting(E_ERROR);
+        ini_set('max_execution_time', 0);
+        set_time_limit(0);
+        
+        require CORE . '/devtools/load/loader.php';
+
+        \DEV\DEVLoader::load();
+
+        // include the database if it's required
+        if(_env('USE_DB', false)) require CORE . '/database/loader.php';
+        else echo "WARNING: Database is not enabled. Enable it in the .env.php file\n";
+
+        // boot all the classes that has that functionality
+        self::bootClasses();
+
+        require core('applock.generator.php');
+
+        // return a simple then statement, that runs after that function
+        return new Console();
     }
 
     private static function loadAll($dir){

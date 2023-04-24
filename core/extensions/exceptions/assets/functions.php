@@ -2,6 +2,8 @@
 
 // check if fatal error
 
+use Core\Framework\Framework;
+
 function check_for_fatal()
 {
     if($error = error_get_last()){
@@ -23,7 +25,7 @@ function display_error(Exception $e){
         exit;
     }
 
-    if(getallheaders()['Accept'] != 'application/json'){
+    if(Framework::isWeb() && getallheaders()['Accept'] != 'application/json'){
         echo "<!--\n";
         var_dump($e);
         echo "-->\n";

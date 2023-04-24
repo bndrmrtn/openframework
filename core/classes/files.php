@@ -13,7 +13,7 @@ class Files extends Base {
     private static $data_store = [];
     private static $tempNameLinks = [];
 
-    public static function boot(){
+    public static function boot():void {
         $store = _env('STORE_PATH',self::$store_path);
         self::$store_path = $store;
         createPath($store);

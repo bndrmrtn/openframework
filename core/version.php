@@ -6,13 +6,14 @@
  * So it needs to read all the directories at a request
  * The next version will probaly contains the include cache
  * But this version contains the views cache for a way better performance ;)
+ * [2023.04] Updates, this version now contains the console app, and the route filter for better readability
  * Thx for using OpenFramework!
  */
 
 $_V = array(
     '@' => '1',
-    '.' => '8',
-    '#' => '2',
+    '.' => '9',
+    '#' => '0',
     'PHP_MIN_REQUIRED' => '8.1.0',
 );
 

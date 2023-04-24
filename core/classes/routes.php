@@ -259,6 +259,11 @@ class Route {
         return self::$route_name;
     }
 
+    public static function getParams($with_key = false){
+        if($with_key) return self::$props;
+        return array_values(self::$props);
+    }
+
     public static function devGetRoutes(){
         return self::$routes;
     }

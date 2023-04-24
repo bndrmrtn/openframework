@@ -140,8 +140,28 @@ input:hover, input:focus, input:active {
     border: 1px solid #39ab46;
 }
 
+.text-framework {
+    color:#47da58;
+}
+
 .btn-framework:active,
 .btn-framework:focus
 {
     box-shadow: 0 0 0 0.23em #47da582d!important;
+}
+
+.bg-app-dark {
+    background-color: #1b1c26;
+}
+
+.text-app-dark {
+    color: #1b1c26;
+}
+
+.text-app-dark-2 {
+    color: #22232e;
+}
+
+.bg-framework {
+    background-color: #47da58!important;
 }

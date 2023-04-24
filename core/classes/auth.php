@@ -28,7 +28,7 @@ class Auth extends Base {
     private static bool $use_sessions = true;
     private static bool $verify_email;
     
-    public static function boot(){
+    public static function boot():void {
         if(_env('USE_AUTH')){
             $config = require config('auth');
             self::$salt = $config['salt'];

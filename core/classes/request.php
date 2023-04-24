@@ -66,6 +66,12 @@ class Request {
         return self::$data_valid;
     }
 
+    public function uri(){
+        return urldecode(
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+        );
+    }
+
     public function rawData(){
         return self::$data;
     }

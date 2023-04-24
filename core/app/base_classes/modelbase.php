@@ -44,8 +44,9 @@ abstract class ModelBase extends Base {
         if(!$userId) return false;
 
         $conf_fields = !isset(static::$_config['writable']) ? static::$_config['fields'] : static::$_config['writable'];
-
-        foreach($this->fields as $name => $value){
+        $fields = $this->fields;
+        if(isset($fields['json_config'])) unset($fields['json_config']);
+        foreach($fields as $name => $value){
             if(in_array($name,$conf_fields)){
                 $new_val = $this->all_field[$name];
                 
@@ -104,7 +105,9 @@ abstract class ModelBase extends Base {
      * @return bool Returns if successfully deleted or not
      */
     public function delete():bool {
-        $deleted = DB::delete(static::$_table,$this->all_field);
+        $deleted = DB::delete(static::$_table,[
+            'id' => $this->id,
+        ]);
         if($key = self::cache_get($this->all_field, true)){
             unset(self::$__cache[$key['key']]);
         }
@@ -127,7 +130,6 @@ abstract class ModelBase extends Base {
         }
 
         if(in_array('date', static::$_config['fields']) && in_array('date', $fields) && !isset($created['date'])) $created['date'] = Dates::now(true);
-
 
         $i = DB::insert(static::$_table,$created);
 
@@ -214,6 +216,13 @@ abstract class ModelBase extends Base {
         $fields = DB::query('DESCRIBE ' . static::$_table);
         if(!isset($fields['error'])) return $fields;
         return NULL;
+    }
+
+    /**
+     * @return string Database table pointed to by the model
+     */
+    public static function getDBTable():?string {
+        return static::$_table;
     }
 
     /**
@@ -337,6 +346,16 @@ abstract class ModelBase extends Base {
         return $this->get();
     }
 
+    public static function select_query($query, $select = '*', $only_exists = false){
+        $q = 'SELECT ' . $select . ' FROM ' . static::$_table . ' ' . $query;
+        $exec = DB::query($q);
+        if(isset($exec['error']) || empty($exec)){
+            return false;
+        }
+        if($only_exists) return true;
+        return $exec;
+    }
+
     /**
      * @return array Execute all the setted select config models
      */
@@ -379,6 +398,7 @@ abstract class ModelBase extends Base {
         
         $or = '';
         if($or_raw){
+            if($where != '') $or .= ' OR';
             foreach($or_raw as $field => $data){
                 if(!is_array($data)){
                     $or .= ' ' . $field . ' = ?';

@@ -12,7 +12,7 @@ define('F_MEM_USAGE',memory_get_usage());
 // require the initializer tools and the whole app
 require __DIR__ . '/../core/initialize.php';
 // load the framework
-Framework::load()->then(function(){
+Framework::load('web')->then(function(){
     // when the framework loaded
     // catch the requested data
     Request::catch();

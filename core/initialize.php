@@ -1,6 +1,6 @@
 <?php
 
-ini_set('error_reporting',0);
+ini_set('error_reporting', 0);
 
 define('ROOT', dirname(__DIR__));
 
@@ -16,5 +16,7 @@ require CORE . '/config.php';
 require CORE . '/extensions/e_configdir__/index.php';
 
 require CORE . '/ini.config.php';
+
+require CORE . '/app/console/console.php';
 
 require CORE . '/app/app.php';

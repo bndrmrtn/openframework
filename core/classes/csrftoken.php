@@ -15,7 +15,7 @@ class Csrf extends Base {
     protected static $token;
     protected static $request_valid = false;
 
-    public static function boot(){
+    public static function boot():void {
         if(_env('USE_CSRF')){
             $token = randomString(100,true,true,true,true);
             if(isset($_COOKIE['csrftoken'])){

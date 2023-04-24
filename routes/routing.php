@@ -4,6 +4,7 @@
 use Core\App\Auth;
 use App\Controller\MainController;
 use App\Controller\UserController;
+use Core\App\Accounts\User;
 use Routing\Route;
 
 // simple route for the index page, with an index controller
@@ -23,8 +24,20 @@ Route::get('/dashboard')->auth(Auth::class)->name('dash')->control(function(){
 });
 
 // a route with params
-Route::get('/user/{name}')->auth(Auth::class)->name('user')->control([UserController::class, 'index']);
+Route::get('/user/{string:name}')->auth(Auth::class)->name('user')->control([UserController::class, 'index']);
 
 // a put request                            remember to remove the name param 
                                             // because it's a new route
-Route::put('/user/{name}')->auth(Auth::class)/*->name('user')*/->control([UserController::class, 'update']);
+Route::put('/user/{string:name}')->auth(Auth::class)/*->name('user')*/->control([UserController::class, 'update']);
+
+// Too many param validation rule in controllers? Opaque code?
+// Use the new route filter instead.
+// Files located in /app/Tools/Routing/Filters/
+// To generate a new filter, run: php dev filter generate name:FilterName
+// For more info, see https://open.mrtn.vip/docs/routing/filters
+Route::get('/filter/user/{@UserFilter:userObject}')->control(function(User $userObject){
+    json([
+        'title' => 'Demo filter usage',
+        'user' => $userObject->fields,
+    ]);
+});

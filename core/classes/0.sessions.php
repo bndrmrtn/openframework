@@ -8,6 +8,7 @@
 namespace Core\App;
 
 use Core\Base\Base;
+use Core\Framework\Framework;
 
 class Session extends Base {
 
@@ -15,14 +16,15 @@ class Session extends Base {
     private static string $singlkey = 'single-requested-data-storage';
     public static string $id;
 
-    public static function boot() {
-        $url_array = parse_url(BASE_URL);
-        $url = $url_array['host'];
-        if(isset($url['port'])){
-            $url . ':' . $url['port'];
-        }
-        session_set_cookie_params(0, '/', $url, $url_array['scheme'] == 'https', true);
-        if(_env('USE_SESSION')){
+    public static function boot():void {
+        if(_env('USE_SESSION') && Framework::isWeb()){
+            $url_array = parse_url(BASE_URL);
+            $url = $url_array['host'];
+            if(isset($url['port'])){
+                $url . ':' . $url['port'];
+            }
+            session_set_cookie_params(0, '/', $url, $url_array['scheme'] == 'https', true);
+            
             $id = self::getId();
             session_id($id);
             session_start();

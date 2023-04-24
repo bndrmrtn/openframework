@@ -10,7 +10,7 @@ return array(
         1 => '}}',
         2 => '*', // use this to disable echo in php
         3 => '!', // use this for auto htmlspecialchars function
-        4 => '--', // use this to comment
+        4 => '--', // use this for comments
     ),
 
     'view-render-file-ext' => '.v.{ext}', // file extension to render

@@ -13,7 +13,7 @@ class View extends Base {
     private static $view__autorender_file = '.view.{ext}';
     private static array $custom_replace = [];
     
-    public static function boot(){
+    public static function boot():void {
         $config = require config('view');
         if(isset($config['ez-tags'])) self::$ez_tags = $config['ez-tags'];
         if(isset($config['view-folder'])) self::$views_dir = $config['view-folder'];

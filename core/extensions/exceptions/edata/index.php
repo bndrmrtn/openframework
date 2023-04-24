@@ -1,10 +1,12 @@
 <?php
 
+use Core\Framework\Framework;
+
 $rurl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 $includes = array_map(function($str) { return str_replace(ROOT, '', $str); }, get_included_files());
 
-if(getallheaders()['Accept'] == 'application/json'){
+if(Framework::isConsole() || getallheaders()['Accept'] == 'application/json'){
 
     $error = [
         'exception' => [
@@ -58,6 +60,7 @@ ob_start();
         <?= xdump($includes,'Included files') ?>
         <?= xdump(getrtime() . 's','Render Time',false,true) ?>
     </div>
+    <?php echo view(".src/:helpers/page-dev") ?>
 </body>
 <?php
 $page = ob_get_contents();

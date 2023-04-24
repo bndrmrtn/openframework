@@ -13,6 +13,9 @@
                               <li><a href="{{ $link['href'] }}" class="nav-link {{ in_array('active',$link) ? 'active' : '' }}">{{ $link['title'] }}</a></li>
                          @endif
                     @endforeach
+                    @if(_env('APP_DEV')):
+                         <li><a href="{{route('pkg.fwm.index')}}" class="nav-link">FWM Dashboard</a></li>
+                    @endif
                </ul>
           </div>
      @endif

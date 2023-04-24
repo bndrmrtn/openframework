@@ -24,7 +24,7 @@ class User extends ModelBase {
         return $this->find($name,$findBy, $fail);
     }
 
-    public static function boot(){
+    public static function boot():void {
         self::$_config = require config('user');
     }
 

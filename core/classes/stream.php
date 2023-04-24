@@ -31,6 +31,7 @@ class Stream {
                         return self::noAuth();
                     }
                 }
+                if(method_exists($instance, '__onUse'))  $instance::__onUse();
                 if(method_exists($instance, '__csrf') && _env('USE_CSRF')){
                     if(!$instance::__csrf() && Request::method() !== 'get'){
                         return back('Failed to validate CSRF Token');

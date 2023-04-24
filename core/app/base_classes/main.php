@@ -31,7 +31,7 @@ abstract class Base extends Main implements BaseInterface {
     /**
      * The boot function
      */
-    public static function boot() {  }
+    public static function boot():void {  }
 
     /**
      * The other implemented methods

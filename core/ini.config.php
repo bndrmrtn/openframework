@@ -13,4 +13,4 @@ ini_set('session.use_only_cookies', _env('SESSION_ONLY_COOKIES','true'));
 
 ini_set('session.hash_function', _env('SESSION_HASH','sha256'));
 
-ini_set('max_execution_time', 10);
+ini_set('max_execution_time', 2);

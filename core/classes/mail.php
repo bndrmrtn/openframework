@@ -21,7 +21,7 @@ class Mail extends Base {
      protected static $from;
      protected static $mail_sender_function;
 
-     public static function boot(){
+     public static function boot():void {
           self::$from = _env('EMAIL','open@framework.com');
           $config = require config('email');
           self::$mail_sender_function = $config['function'];
