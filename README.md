@@ -1,3 +1,8 @@
+# ARCHIVED
+
+This framework is still available with some extra features and a new name on another repository.
+Please click [here](https://github.com/flamephpdev/flamecore) and use [FlameCore](https://flamephp.mrtn.vip) instead, it will **no longer be maintained**.
+
 # Welcome to OpenFramework!
 
 ## Create PHP Apps in a faster way
